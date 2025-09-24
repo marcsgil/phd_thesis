@@ -1,5 +1,6 @@
 \documentclass[a4paper,10pt]{report}
-\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{amsmath, amsfonts, amssymb, physics}
+\usepackage{revsymb}
 
 \title{PhD Thesis}
 \author{M. Gil de Oliveira}
@@ -11,7 +12,130 @@
 
 \chapter{Wave Optics}
 
-\section{Lenses}
+\section{Quadratic Hamiltonians}
+
+We consider hamiltonians of the form
+\begin{equation}
+\hat{H} = \frac{1}{2} \sum_{j,k} h_{jk} \hat{\xi}_j \hat{\xi}_k
+\end{equation}
+where $\boldsymbol{\hat{\xi}} = (\hat{x}_1, \ldots, \hat{x}_n, \hat{p}_1, \ldots, \hat{p}_n)$ is a vector of position and momentum operators ($\hat{p}_j = -i \lambdabar \partial_{x_j}$) satisfying the canonical commutation relations
+\begin{equation}
+[\hat{\xi}_j, \hat{\xi}_k] = i \lambdabar \Omega_{jk}
+\end{equation}
+with
+\begin{equation}
+\boldsymbol{\Omega} = \begin{pmatrix}0 & I_n \\ -I_n & 0 \end{pmatrix}
+\end{equation}
+being the symplectic form. Furthermore, $h_{jk}$ are the entries of a real symmetric matrix $\mathbf{h}$. Furthermore, $\lambdabar = \lambda/(2\pi) = 1/k$ is the reduced wavelength.
+
+A state $\ket{\psi}$ evolves according to the Schrödinger equation
+\begin{equation}
+    \label{eq:schrodinger_like_equation}
+i \lambdabar \frac{\partial}{\partial \eta} \ket{\psi(\eta)} = \hat{H} \ket{\psi(\eta)}
+\end{equation}
+where $\eta$ is an abstract evolution parameter. This has a solution
+\begin{equation}
+    \label{eq:schrodinger_like_solution}
+    \ket{\psi(\eta)} = \hat{U}(\eta) \ket{\psi(0)}
+\end{equation}
+where
+\begin{equation}\hat{U}_\eta = \exp\left(-\frac{i}{\lambdabar} \hat{H} \eta\right)\end{equation}
+is a unitary operator.
+
+In the Heisenberg picture, operators evolve according to
+\begin{equation}
+\frac{d\boldsymbol{\hat{\xi}}}{d\eta} = \frac{i}{\lambdabar} [\hat{H}, \boldsymbol{\hat{\xi}}] = \boldsymbol{\Omega} \mathbf{h} \boldsymbol{\hat{\xi}}
+\end{equation}
+which has the solution
+\begin{equation}
+\boldsymbol{\hat{\xi}}(\eta) = \mathbf{S}(\eta) \boldsymbol{\hat{\xi}}(0)
+\end{equation}
+where
+\begin{equation}\mathbf{S}(\eta) = \exp(\boldsymbol{\Omega} \mathbf{h} \eta)\end{equation}
+is a symplectic matrix, i.e., it satisfies
+\begin{equation}\mathbf{S}\boldsymbol{\Omega} \mathbf{S}^T = \boldsymbol{\Omega}.\end{equation}
+
+\section{Free Propagation}
+
+The propagation of light within the paraxial approximation is governed by the paraxial wave equation
+\begin{equation}
+    2ik\partial_z u(\mathbf{r}, z) = -\partial_x^2 u(\mathbf{r}, z).
+\end{equation}
+
+This may be put in the form of equation \eqref{eq:schrodinger_like_equation} by identifying $\eta = z$, and
+\begin{equation}
+    \mathbf{h} = \begin{pmatrix}
+        0 & 0 \\
+        0 & 1
+    \end{pmatrix} .
+\end{equation}
+A direct computation shows that $(\boldsymbol{\Omega}\mathbf{h})^2 = \boldsymbol{0}$, so that $\mathbf{S}(z)$, which, in this case, we denote by $\mathbf{FP}_z$, is given by
+\begin{equation}
+    \mathbf{FP}_z = \boldsymbol{I} + \boldsymbol{\Omega}\mathbf{h} z = \begin{pmatrix}
+        1 & z \\
+        0 & 1
+    \end{pmatrix} .
+\end{equation}
+
+\section{Thin lens}
+
+A thin lens of focal length $f$ is described can be described as imposing a phase shift $u \mapsto u e^{-ikx^2/f}$. Upon comparison with equation \eqref{eq:schrodinger_like_solution}, we see that this corresponds to the Hamiltonian
+\begin{equation}
+    \mathbf{h} = \begin{pmatrix}
+        1 & 0 \\
+        0 & 0
+    \end{pmatrix}
+\end{equation}
+with the parameter $\eta = 1/f$. A direct computation shows that $(\boldsymbol{\Omega}\mathbf{h})^2 = \boldsymbol{0}$, so that $\mathbf{S}(1/f)$, which, in this case, we denote by $\mathbf{L}_f$, is given by
+\begin{equation}
+    \mathbf{L}_f = \boldsymbol{I} + \boldsymbol{\Omega}\mathbf{h} / f = \begin{pmatrix}
+        1 & 0 \\
+        -1/f & 1
+    \end{pmatrix} .
+\end{equation}
+
+\section{Composition}
+
+The composition of optical elements is described by the matrix product of the corresponding symplectic matrices. For example, the propagation through a thin lens of focal length $f$ followed by a free propagation of length $z$ is described by
+\begin{equation}
+    \mathbf{FP}_z \mathbf{L}_f = \begin{pmatrix}
+        1 - z/f & z \\
+        -1/f & 1
+    \end{pmatrix} .
+\end{equation}
+
+If we include another free propagation of length $z_1$ before the lens, we have
+\begin{equation}
+    \mathbf{FP}_{z_2} \mathbf{L}_f \mathbf{FP}_{z_1} = \begin{pmatrix}
+        1 - z_2/f & z_1 + z_2 - z_1 z_2 / f \\
+        -1/f & 1 - z_1 / f
+    \end{pmatrix} .
+\end{equation}
+
+On the other hand, if we have a lens after the free propagation, we have
+\begin{equation}
+    \mathbf{L}_{f_2} \mathbf{FP}_{z} \mathbf{L}_{f_1} = \begin{pmatrix}
+        1 - z/f_1 & z \\
+        z / (f_1 f_2) - 1/f_1 - 1/f_2 & 1 - z / f_2
+    \end{pmatrix} .
+\end{equation}
+
+Finally, a telescope like system, in which two lenses of focal lengths $f_1$ and $f_2$ are separated by free space propagation, is described by
+\begin{equation}
+    \mathbf{FP}_{z_3} \mathbf{L}_{f_2} \mathbf{FP}_{z_2} \mathbf{L}_{f_1} \mathbf{FP}_{z_1} = \begin{pmatrix}
+        (1-z_3/f_2)(1-z_2/f_1) - z_3 / f_1 & (1 - z_3 / f_2)(z_1 + z_2 - z_1 z_2 / f_1) + z_3 (1 - z_1 / f_1) \\
+        z_2 / (f_1 f_2) - 1/f_1 - 1/f_2 & 1 - z_1 / f_1 + (z_1 z_2 / f_1 - z_1 - z_2)/f_2
+    \end{pmatrix} .
+\end{equation}
+
+In order to obtain a proper imaging system, we would like to obtain a diagonal matrix. The lower left entry vanishes if $z_2 = f_1 + f_2$. Additionally, the upper right entry vanishes if $z_1 = f_1$ and $z_3 = f_2$. In this case, we obtain 
+\begin{equation}
+    \mathbf{FP}_{f_2} \mathbf{L}_{f_2} \mathbf{FP}_{f_1+f_2} \mathbf{L}_{f_1} \mathbf{FP}_{f_1} = \begin{pmatrix}
+        -f_2 / f_1 & 0 \\
+        0 & -f_1 / f_2
+    \end{pmatrix} .
+\end{equation}
+We see that the image is magnified by a factor $m = -f_2 / f_1$, where the minus sign indicates that the image is inverted.
 
 \chapter{My Publications}
 
