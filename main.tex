@@ -58,14 +58,14 @@ where $u(\mathbf{r})$ is a complex function describing an envelope that modulate
     \nabla^2 u + 2ik \partial_z u= 0.
 \end{equation}
 
-\begin{figure}[]
+\begin{figure}[h]
     \includegraphics[scale=0.7]{images/feixe_paraxial.png}
     \centering
     \caption{Envelope of a paraxial beam.}
     \label{fig: paraxial beam}
 \end{figure}
 
-The typical envelope of a laser beam is shown in Fig. \ref{fig: paraxial beam}. The envelope $u(\mathbf{r})$ varies slowly along the $z$ direction. More precisely, the variation of $u$ in the $z$ is much smaller than the scale of variation defined by the wavenumber $k$. Therefore, we will assume that $\partial_z^2 u \ll k \partial_z u$, which allows us to neglect the second derivative with respect to $z$ in the wave equation. This leads us to the paraxial wave equation
+The typical envelope of a laser beam is shown in Fig. \ref{fig: paraxial beam}. The envelope $u(\mathbf{r})$ varies slowly along the $z$ direction. More precisely, the variation of $u$ in the $z$ is much smaller than the scale of variation defined by the wave number $k$. Therefore, we will assume that $\partial_z^2 u \ll k \partial_z u$, which allows us to neglect the second derivative with respect to $z$ in the wave equation. This leads us to the paraxial wave equation
 \begin{equation}
 \label{eq:paraxial}
     \nabla^2_T u + 2ik \partial_z u = 0,
@@ -148,7 +148,7 @@ which is analogous to the Schrödinger equation with a potential, i.e.,
 \end{equation}
 This is what happens, for example, inside a waveguide, with the refractive index $n(x,y)$ being responsible for confining the light to a specific region of space, just like a potential well confines a quantum particle.
 
-This analogy can also be extended to understand the imaging properties of lenses \cite{stoler1981operator}.
+This analogy can also be extended to understand the imaging properties of lenses \cite{Stoler:81}.
 
 \section{Quadratic Hamiltonians}
 
@@ -164,7 +164,7 @@ with
 \begin{equation}
 \boldsymbol{\Omega} = \begin{pmatrix}0 & I_n \\ -I_n & 0 \end{pmatrix}
 \end{equation}
-being the symplectic form. Furthermore, $h_{jk}$ are the entries of a real symmetric matrix $\mathbf{h}$. Furthermore, $\lambdabar = \lambda/(2\pi) = 1/k$ is the reduced wavelength.
+being the symplectic form. Furthermore, $h_{jk}$ are the entries of a real symmetric matrix $\mathbf{h}$. Besides, $\lambdabar = \lambda/(2\pi) = 1/k$ is the reduced wavelength.
 
 A state $\ket{\psi}$ evolves according to the Schrödinger equation
 \begin{equation}
@@ -192,6 +192,8 @@ where
 \begin{equation}\mathbf{S}(\eta) = \exp(\boldsymbol{\Omega} \mathbf{h} \eta)\end{equation}
 is a symplectic matrix, i.e., it satisfies
 \begin{equation}\mathbf{S}\boldsymbol{\Omega} \mathbf{S}^T = \boldsymbol{\Omega}.\end{equation}
+
+These methods are based on \cite{Stoler:81,Nazarathy:82}
 
 \section{Free Propagation}
 
@@ -260,10 +262,12 @@ On the other hand, if we have a lens after the free propagation, we have
 
 Finally, a telescope like system, in which two lenses of focal lengths $f_1$ and $f_2$ are separated by free space propagation, is described by
 \begin{equation}
-    \mathbf{FP}_{z_3} \mathbf{L}_{f_2} \mathbf{FP}_{z_2} \mathbf{L}_{f_1} \mathbf{FP}_{z_1} = \begin{pmatrix}
+    \begin{aligned}
+        &\mathbf{FP}_{z_3} \mathbf{L}_{f_2} \mathbf{FP}_{z_2} \mathbf{L}_{f_1} \mathbf{FP}_{z_1}  = \\ &\begin{pmatrix}
         (1-z_3/f_2)(1-z_2/f_1) - z_3 / f_1 & (1 - z_3 / f_2)(z_1 + z_2 - z_1 z_2 / f_1) + z_3 (1 - z_1 / f_1) \\
         z_2 / (f_1 f_2) - 1/f_1 - 1/f_2 & 1 - z_1 / f_1 + (z_1 z_2 / f_1 - z_1 - z_2)/f_2
     \end{pmatrix} .
+    \end{aligned}
 \end{equation}
 
 In order to obtain a proper imaging system, we would like to obtain a diagonal matrix. The lower left entry vanishes if $z_2 = f_1 + f_2$. Additionally, the upper right entry vanishes if $z_1 = f_1$ and $z_3 = f_2$. In this case, we obtain 
@@ -305,7 +309,7 @@ where the Fourier coefficients $\tilde{u}_m(z)$ are given by
     \tilde{u}_m(z) = \frac{1}{L} \int_0^L dx \ e^{-i k_m x} u(x,z).
 \end{equation}
 
-This is the equivalent of the Fourier transform for periodic functions, and it is defined in terms of a discrete sum over the wave numbers $k_m$, instead of continuous integral over wavenumbers. The Fourier coefficients $\tilde{u}_m(z)$ are complex numbers that encode the amplitude and phase of each harmonic component of the solution $u(x,z)$.
+This is the equivalent of the Fourier transform for periodic functions, and it is defined in terms of a discrete sum over the wave numbers $k_m$, instead of continuous integral over wave numbers. The Fourier coefficients $\tilde{u}_m(z)$ are complex numbers that encode the amplitude and phase of each harmonic component of the solution $u(x,z)$.
 
 We may then proceed just as the continuous case, and substitute the Fourier series \eqref{eq:fourier series} into the paraxial wave equation \eqref{eq:paraxial}. This leads to a simple ordinary differential equation for each Fourier coefficient $\tilde{u}_n(z)$:
 \begin{equation}
@@ -363,14 +367,14 @@ Now we make a subtle but extremely important observation: \eqref{eq:dft} is not 
 \end{equation}
 where $s_m$ is an integer that can be chosen arbitrarily. This will give exactly the same result as \eqref{eq:interpolation} (which corresponds to $s_m = 0$), at the sample points $x_n$, but will change the value of the function in between. This is because the exponential terms are simply completing a different number of oscillations between the sample points. Although the behavior at the sample points is the same, the interpolation between them is different, and this will lead to different results for the solution $u(x,z)$.
 
-The question is then how to choose the integers $s_m$. The idea is, in the absence of any other information, to make the choice that minimizes the oscillations of the solution $u(x,z)$ between the sample points \cite{fftderiv}. As the frequency of the oscillations is given by the term $2\pi (m + s_m N) / L$, we want to minimize $\abs{m + s_m N}$ for each $m$, this is achieved by choosing $s_m = 0$ for $m \le N/2$ and $s_m = -1$ for $m > N/2$. As an example, for $N = 5$, the corresponding wavenumbers should be $(0, 1, 2, -2, -1) \times \frac{2\pi}{L}$. Fortunately, most numerical libraries that implement the DFT also implement a function called fftfreq, which computes the frequencies of the Fourier coefficients in this way. This is simply a reordering of part of the sequence $(-2, -1, 0, 1, 2) \times \frac{2\pi}{L}$, which would correspond to defining the DFT \eqref{eq:dft} with a symmetric sum instead. As this is not the convention, one uses the fftfreq instead. 
+The question is then how to choose the integers $s_m$. The idea is, in the absence of any other information, to make the choice that minimizes the oscillations of the solution $u(x,z)$ between the sample points \cite{fftderiv}. As the frequency of the oscillations is given by the term $2\pi (m + s_m N) / L$, we want to minimize $\abs{m + s_m N}$ for each $m$, this is achieved by choosing $s_m = 0$ for $m \le N/2$ and $s_m = -1$ for $m > N/2$. As an example, for $N = 5$, the corresponding wave numbers should be $(0, 1, 2, -2, -1) \times \frac{2\pi}{L}$. Fortunately, most numerical libraries that implement the DFT also implement a function called fftfreq, which computes the frequencies of the Fourier coefficients in this way. This is simply a reordering of part of the sequence $(-2, -1, 0, 1, 2) \times \frac{2\pi}{L}$, which would correspond to defining the DFT \eqref{eq:dft} with a symmetric sum instead. As this is not the convention, one uses the fftfreq instead. 
 
 With this discussion in mind, we can finally write our numerical approximation to the solution of the paraxial wave equation as follows:
 \begin{alg}[Numerical angular spectrum method]
 \leavevmode
 \begin{enumerate}
     \item Compute the DFT $\tilde{u}_m(0)$ of the initial condition of the initial condition $u_n(0) = u(x_n,0)$ at the sample points $x_n = n \Delta x$, where $n = 0, \ldots, N-1$.
-    \item For each $m$, compute the solution $\tilde{u}_m(z)$ using the formula \eqref{eq:solution_paraxial_fourier_discrete}. Remember to obtain the wavenumbers $k_m$ using the fftfreq function, which will automatically take care of the reordering of the frequencies.
+    \item For each $m$, compute the solution $\tilde{u}_m(z)$ using the formula \eqref{eq:solution_paraxial_fourier_discrete}. Remember to obtain the wave numbers $k_m$ using the fftfreq function, which will automatically take care of the reordering of the frequencies.
     \item Finally, compute the inverse DFT to obtain the solution $u_n(z) = u(x_n,z)$.
 \end{enumerate}
 \end{alg}
