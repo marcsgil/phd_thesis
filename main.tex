@@ -270,6 +270,20 @@ Finally, a telescope like system, in which two lenses of focal lengths $f_1$ and
     \end{aligned}
 \end{equation}
 
+\subsection{Imaging}
+
+\subsubsection{Single lens}
+
+By setting $1/f = 1/z_1 + 1/z_2$, we obtain
+\begin{equation}
+    \mathbf{FP}_{z_2} \mathbf{L}_f \mathbf{FP}_{z_1} = \begin{pmatrix}
+        -z_2 / z_1 & 0 \\
+        -1/f & -z_1 / z_2
+    \end{pmatrix} .
+\end{equation}
+
+\subsubsection{4f system}
+
 In order to obtain a proper imaging system, we would like to obtain a diagonal matrix. The lower left entry vanishes if $z_2 = f_1 + f_2$. Additionally, the upper right entry vanishes if $z_1 = f_1$ and $z_3 = f_2$. In this case, we obtain 
 \begin{equation}
     \mathbf{FP}_{f_2} \mathbf{L}_{f_2} \mathbf{FP}_{f_1+f_2} \mathbf{L}_{f_1} \mathbf{FP}_{f_1} = \begin{pmatrix}
@@ -278,6 +292,62 @@ In order to obtain a proper imaging system, we would like to obtain a diagonal m
     \end{pmatrix} .
 \end{equation}
 We see that the image is magnified by a factor $m = -f_2 / f_1$, where the minus sign indicates that the image is inverted.
+
+\subsection{Fourier transforming system}
+By setting $z_1 = z_2 = f$, we obtain
+\begin{equation}
+    \mathbf{L}_f \mathbf{FP}_f \mathbf{L}_f = \begin{pmatrix}
+        0 & f \\
+        -1/f & 0
+    \end{pmatrix} .
+\end{equation}
+
+On the other hand, by setting $z_1 = 0$ and $z_2 = f$, we obtain
+\begin{equation}
+    \mathbf{L}_f \mathbf{FP}_f = \begin{pmatrix}
+        0 & f \\
+        -1/f & 1
+    \end{pmatrix} .
+\end{equation}
+
+\subsection{Free Propagation revisited}
+
+The following two decompositions of the free propagation correspond to the Fresnel diffraction integral in the direct and Fourier domains, respectively:
+\begin{equation}
+    \mathbf{FP}_z = \begin{pmatrix}
+        1 & 0 \\
+        1/z & 1
+    \end{pmatrix} \begin{pmatrix}
+        0 & z \\
+        -1/z & 0
+    \end{pmatrix} \begin{pmatrix}
+        1 & 0 \\
+        1/z & 1
+    \end{pmatrix} = \begin{pmatrix}
+        0 & 1 \\
+        -1 & 0
+    \end{pmatrix} \begin{pmatrix}
+        1 & 0 \\
+        z & 1
+    \end{pmatrix} \begin{pmatrix}
+        0 & 1 \\
+        -1 & 0
+    \end{pmatrix}
+\end{equation}
+
+Fraunhofer's diffraction is obtained by ignoring the first quadratic phase factor in the first decomposition, on the grounds that it does not contribute significantly to the integral when $z \gg kw^2/2$. We then obtain
+\begin{equation}
+    \mathbf{FP}_z \approx \begin{pmatrix}
+        1 & 0 \\
+        1/z & 1
+    \end{pmatrix} \begin{pmatrix}
+        0 & z \\
+        -1/z & 0
+    \end{pmatrix} = \begin{pmatrix}
+        0 & z \\
+        -1/z & 1
+    \end{pmatrix} .
+\end{equation}
 
 \chapter{Numerical solution}
 
