@@ -186,7 +186,8 @@ In the Heisenberg picture, operators evolve according to
 \end{equation}
 which has the solution
 \begin{equation}
-\boldsymbol{\hat{\xi}}(\eta) = \mathbf{S}(\eta) \boldsymbol{\hat{\xi}}(0)
+    \label{eq:double_covering}
+\boldsymbol{\hat{\xi}}(\eta) = \hat{U}_\eta^\dagger \boldsymbol{\hat{\xi}}(0) \hat{U}_\eta  = \mathbf{S}(\eta) \boldsymbol{\hat{\xi}}(0)
 \end{equation}
 where
 \begin{equation}\mathbf{S}(\eta) = \exp(\boldsymbol{\Omega} \mathbf{h} \eta)\end{equation}
@@ -348,6 +349,36 @@ Fraunhofer's diffraction is obtained by ignoring the first quadratic phase facto
         -1/z & 1
     \end{pmatrix} .
 \end{equation}
+
+\subsection{Effect on the field}
+
+We have seen that we can decompose many transformations in terms of simpler ones. However, we have not yet seen how these transformations affect the field $u(x,z)$. The effect of the thin lens has already been introduced. Let us analyze the effect of the matrix of the form
+\begin{equation}
+    \mathbf{S} = \begin{pmatrix}
+        0 & B \\
+        -B^{-1} & 0
+    \end{pmatrix},
+\end{equation}
+which will correspond to a certain unitary operator $\hat{U}$. Let us define the matrix element $g(x,x^\prime) = \bra{x} \hat{U} \ket{x^\prime}$, where $\ket{x}$ are the eigenstates of the position operator $\hat{x}$. In this way, we have
+\begin{equation}
+    \overline{u}(x) = \bra{x} \hat{U} \ket{\psi} = \int dx^\prime \bra{x} \hat{U} \ket{x^\prime} \braket{x^\prime | \psi} = \int dx^\prime g(x,x^\prime) u(x^\prime).
+\end{equation}
+
+By invoking equation \eqref{eq:double_covering}, we may deduce the system of equations
+
+\begin{equation}
+    \begin{aligned}
+        \partial_x g(x,x^\prime) &= -\frac{ik}{B} x^\prime g(x,x^\prime) \\
+        \partial_{x^\prime} g(x,x^\prime) &= -\frac{ik}{B} x g(x,x^\prime)
+    \end{aligned},
+\end{equation}
+from which we obtain a solution
+\begin{equation}
+    g(x,x^\prime) = \frac{1}{\sqrt{i \lambda B}} e^{-ik x x^\prime / B}.
+\end{equation}
+
+We see therefore that this is simply a Fourier transform.
+The modulus of the normalization factor is fixed by the unitarity of $\hat{U}$. This implies that $\norm{\overline{u}}_2 = \norm{u}_2$. Then, by applying Plancherel's theorem, we obtain the desired result. I still do not have a good argument for the phase of the normalization factor.
 
 \chapter{Numerical solution}
 
