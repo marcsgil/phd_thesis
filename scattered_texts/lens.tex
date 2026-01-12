@@ -1,0 +1,211 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{amsmath, amsfonts, amssymb, physics}
+\usepackage{revsymb}
+
+\usepackage{amsmath,amsfonts,amsthm,physics,braket,indentfirst}
+\usepackage{float}
+
+\usepackage[a4paper,
+            left=3cm,
+            right=3cm,
+            top=3cm,
+            bottom=3cm]{geometry}
+
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,       	
+	linkcolor=blue,          	
+	citecolor=blue,        		
+	urlcolor=blue}
+\usepackage{url}
+
+\newtheorem{alg}{Algorithm}
+\newtheorem{exe}{Exercise}
+
+\title{Properties of Lenses}
+\author{M. Gil de Oliveira}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{A wave optics approach to lenses}
+
+Many optical components consist of a transparent material with a refractive index different from that of the surrounding medium. A lens is an example of such a component, where the shape of the material is designed to focus or defocus light. In this section, we will analyze the effect of a thin lens on an incident wavefront using wave optics principles. This section is based on the treatment found in \cite{saleh2019fundamentals,goodman2017introduction}, which can be consulted for further details and illustrations.
+
+\subsection{Transparent plate}
+
+Let us first analyze the simplest such device, where a slab of material of thickness $d$ and refractive index $n_1$ is surrounded by a medium of refractive index $n_0$. We introduce a coordinate system where the $z$-axis is normal to the slab, and the $x$ and $y$ axes are in the plane of the slab. The slab extends from $z=0$ to $z=d$. We will analyze the effect of this slab on an incident plane wave. More specifically, we want to know how to express the complex amplitude of the wave just after the slab, $u(x,y,d)$, in terms of the complex amplitude just before the slab, $u(x,y,0)$. Although the analysis will be done for a plane wave, we will assume that the result remains valid for any paraxial wave. The details of validity of this assumption can be found in \cite{saleh2019fundamentals}. 
+
+Throughout all space, the wave will remain a plane wave, which can be written as
+\begin{equation}
+    u(x,y,z) = A(z) e^{i k_0 n(z) z},
+\end{equation}
+where $k_0 = 2 \pi / \lambda$ is the wavenumber in vacuum, $\lambda$ is the wavelength in vacuum, $n(z)$ is the refractive index at position $z$, and $A(z)$ is the complex amplitude of the wave at position $z$. Both $n(z)$ and $A(z)$ can change only at the interfaces of the slab, and can be expressed as
+\begin{equation}
+    n(z) = \begin{cases}
+    n_0, & z < 0 \\
+    n_1, & 0 \leq z \leq d \\
+    n_0, & z > d
+    \end{cases},
+\end{equation}
+and
+\begin{equation}
+    A(z) = \begin{cases}
+    A_{0}, & z < 0 \\
+    A_{1}, & 0 \leq z \leq d \\
+    A_{2}, & z > d
+    \end{cases}.
+\end{equation}
+The aim is therefore to find the relation between $A_2$ and $A_0$, which can be done by enforcing continuity of the field at the interfaces. Applying this condition at $z=0$, we have that
+\begin{equation}
+    \lim_{z \to 0^-} u(x,y,z) = \lim_{z \to 0^+} u(x,y,z) \implies A_0 = A_1.
+\end{equation}
+On the other hand, applying the same condition at $z=d$, we have that
+\begin{equation}
+    \lim_{z \to d^-} u(x,y,z) = \lim_{z \to d^+} u(x,y,z) \implies A_1 e^{i k_0 n_1 d} = A_2 e^{i k_0 n_0 d}.
+\end{equation}
+By combining these two results, we find that
+\begin{equation}
+    u(x,y,d) = u(x,y,0) e^{i k_0 n_1 d}.
+\end{equation}
+We see that the effect of the slab is to introduce a phase shift of $e^{i k_0 n_1 d}$ to the incident wave. We will see in the next subsection that more complex shapes can introduce spatially varying phase shifts, which can be used to manipulate the wavefront of the incident wave.
+
+\subsection{Curved surface}
+
+We once again consider a transparent material of refractive index $n_1$ surrounded by a medium of refractive index $n_0$. However, instead of a slab, we now consider that the material has a curved surface described with thickness $d(x,y)$. By denoting the maximum thickness of the material as $d_0$, we see that we have to perform the analysis for propagation of a distance $d(x,y)$ through the material, followed by a propagation of distance $d_0 - d(x,y)$ through the surrounding medium. By applying the same reasoning as in the previous subsection, we find that the effect of this curved surface is to introduce a spatially varying phase shift to the incident wave, which can be expressed as
+\begin{equation}
+    u(x,y,d_0) = u(x,y,0) e^{i k_0 n_1 d(x,y)} e^{i k_0 n_0 [d_0 - d(x,y)]} = u(x,y,0) e^{i k_0 n_0 d_0} e^{i k_0 \Delta n d(x,y)}.
+\end{equation}
+The term $e^{i k_0 n_0 d_0}$ is a constant phase factor that does not depend on position. As this can only be seen in interference experiments, we will ignore it in the following. The term $e^{i k_0 \Delta n d(x,y)}$, where $\Delta n = n_1 - n_0$, is a spatially varying phase factor that depends on the shape of the surface $d(x,y)$. By properly designing this shape, we can manipulate the wavefront of the incident wave in a desired manner. In the next subsection, we will see how to design a surface that behaves like a lens.
+
+\subsection{Lenses}
+
+In this subsection, we will only present an expression for the phase introduced by a lens, while, in the next section, we will analyze its imaging properties, which will justify the expression presented here. 
+
+A lens is an optical component that is designed to focus or defocus light. From intuition, we know that, for a surface to behave like a lens, it should be curved in such a way that light rays passing through different parts of the lens converge or diverge at a specific point, which is related to its focal length. Mathematically, the curvature of a surface is related to its second derivative. We, therefore, express the thickness $d(x,y)$ as a Taylor expansion up to second order around the optical axis $(x,y) = (0,0)$, which gives
+\begin{equation}
+    d(\mathbf{r}) = d(\boldsymbol{0}) + \nabla d(\boldsymbol{0}) \cdot \mathbf{r} + \frac{1}{2} \mathbf{r}\mathbf{H}_d(\boldsymbol{0}) \mathbf{r}^T.
+\end{equation}
+
+Here, we have introduced the position vector in the transverse plane, $\mathbf{r} = (x,y)$, the gradient of $d$ at the origin, $\nabla d(\boldsymbol{0}) = \left( \frac{\partial d}{\partial x}, \frac{\partial d}{\partial y} \right)_{\mathbf{r} = \boldsymbol{0}}$, and the Hessian matrix of $d$ at the origin,
+\begin{equation}
+    \mathbf{H}_d(\boldsymbol{0}) = \begin{pmatrix}
+    \left( \frac{\partial^2 d}{\partial x^2} \right)_{\mathbf{r} = \boldsymbol{0}} & \left( \frac{\partial^2 d}{\partial x \partial y} \right)_{\mathbf{r} = \boldsymbol{0}} \\
+    \left( \frac{\partial^2 d}{\partial y \partial x} \right)_{\mathbf{r} = \boldsymbol{0}} & \left( \frac{\partial^2 d}{\partial y^2} \right)_{\mathbf{r} = \boldsymbol{0}}
+    \end{pmatrix}.
+\end{equation}
+
+We will now perform some simplifications to this expression. First, we ignore the constant term $d(\boldsymbol{0})$, as it only introduces a constant phase factor. Second, we assume that the lens is symmetric around the optical axis, which implies that the first derivative at the origin is zero, i.e., $\nabla d(\boldsymbol{0}) = \boldsymbol{0}$. The effect of this term would be to introduce a tilt to the wavefront, which is not a desired property of a lens, but can show up in misaligned systems or in prisms. Finally, as the Hessian is a symmetric matrix, we can always find a coordinate system where it is diagonal. By choosing such a coordinate system, we can express effect of a lens on an incident wave as
+\begin{equation}
+    u(\mathbf{r}, d_0) = u(\mathbf{r}, 0) \exp \left[ -i k_0 \left( \frac{x^2}{2 f_x} + \frac{y^2}{2 f_y} \right) \right].
+\end{equation}
+
+Here, we have defined $f_x = \left[\Delta n\left(\frac{\partial^2 d}{\partial x^2} \right)_{\mathbf{r} = \boldsymbol{0}}\right]^{-1}$ and $f_y = \left[\Delta n\left(\frac{\partial^2 d}{\partial y^2} \right)_{\mathbf{r} = \boldsymbol{0}}\right]^{-1}$ as the focal lengths of the lens in the $x$ and $y$ directions, respectively.
+
+Consider, for example, a plano-convex lens, where one surface is flat and the other surface is part of a sphere of radius $R$. By placing the origin of the coordinate system at the vertex of the curved surface, we can express the thickness of the lens as
+\begin{equation}
+    d(x,y) = R - \sqrt{R^2 - x^2 - y^2}.
+\end{equation}
+In this case, we can calculate the second derivatives at the origin as
+\begin{equation}
+    \left( \frac{\partial^2 d}{\partial x^2} \right)_{\mathbf{r} = \boldsymbol{0}} = \left( \frac{\partial^2 d}{\partial y^2} \right)_{\mathbf{r} = \boldsymbol{0}} = \frac{1}{R}.
+\end{equation}
+By substituting these results into the expressions for the focal lengths, we find that
+\begin{equation}
+    f_x = f_y = f = \frac{R}{\Delta n}.
+\end{equation}
+This result is known as the lensmaker's formula for a plano-convex lens. It shows that the focal length of the lens depends on the radius of curvature of the curved surface and the refractive index difference between the lens material and the surrounding medium.
+
+For a biconvex lens, where both surfaces are part of spheres of radii $R_1$ and $R_2$, we can follow a similar procedure to find that the focal length is given by
+\begin{equation}
+    \frac{1}{f} = \Delta n \left( \frac{1}{R_1} - \frac{1}{R_2} \right).
+\end{equation}
+This is the general lensmaker's formula for a thin lens in air.
+
+On the other hand, for a cylindrical lens, where the curvature is only in one direction, we have that one of the focal lengths is infinite. For example, if the curvature is only in the $x$ direction, we have that $f_x = f$ and $f_y = \infty$. This means that the lens focuses light in the $x$ direction while leaving it unchanged in the $y$ direction.
+
+\section{Imaging and Fourier Properties}
+
+In this section, we will analyze the imaging and Fourier properties of lenses using expressions derived in the previous section. This is done by composing the effect of a lens with free-space propagation described either by the Fresnel diffraction integral
+\begin{equation}
+     u(\mathbf{r}) = \frac{1}{i\lambda z} \int_{\mathbb{R}^2} d^2\mathbf{r}^\prime u(\mathbf{r}^\prime) e^{ik[(\mathbf{r} - \mathbf{r}^\prime)^2] / 2z}
+\end{equation}
+or by the angular spectrum method
+\begin{equation}
+    u(\mathbf{r}) = \frac{1}{2\pi}\int_{\mathbf{r}^2} \tilde{u}_0(\mathbf{q}) e^{i z \mathbf{q}^2 / 2k} e^{i \mathbf{q} \cdot \mathbf{r}} d^2 \mathbf{q}, \ \ \ \tilde{u}_0(\mathbf{q}) = \frac{1}{2\pi} \int_{\mathbb{R}^2} u_0(\mathbf{r}) e^{-i \mathbf{q} \cdot \mathbf{r}} d^2 \mathbf{r}.
+\end{equation}
+
+Consider now a system where a field $u_0(\mathbf{r})$ first propagates a distance $z_1$ to reach a lens of focal length $f$, and then propagates a distance $z_2$ after the lens. Let us denote the complex amplitude just before the lens as $u_1(\mathbf{r})$, just after the lens as $u_2(\mathbf{r})$, and at the output plane as $u(\mathbf{r})$. As we have seen in the previous section, the effect of the lens is to introduce a quadratic phase factor to the incident field, which can be expressed as $u_2(\mathbf{r}) = u_1(\mathbf{r}) e^{-i k \mathbf{r}^2 / 2 f}$. By combining this with the Fresnel diffraction integral for the second propagation step, we find that
+\begin{equation}
+    u(\mathbf{r}) = \frac{e^{i k \mathbf{r}^2 / 2 z_2}}{i\lambda z_2} \int_{\mathbb{R}^2} d^2\mathbf{r}^\prime u_1(\mathbf{r}^\prime) \exp\left\{ ik \left[ \frac{(\mathbf{r}^\prime)^2}{2} \left(\frac{1}{z_2} - \frac{1}{f}\right) - \frac{\mathbf{r} \cdot \mathbf{r}^\prime}{z_2} \right]  \right\}.
+\end{equation}
+
+The field $u_1(\mathbf{r}^\prime)$ can also be expressed in terms of the input field $u_0(\mathbf{r}^{\prime \prime})$, but the choice of the propagation method will depend on the configuration we want to analyze. 
+
+\subsection{Imaging configuration}
+
+In this case, we will express $u_1$ in terms of $u_0$ using the Fresnel diffraction integral for the first propagation step, which gives
+\begin{equation}
+    u(\mathbf{r}) = -\frac{e^{i k \mathbf{r}^2 / 2 z_2}}{\lambda^2 z_1 z_2}  \int_{\mathbb{R}^4} d^2\mathbf{r}^\prime d^2\mathbf{r}^{\prime \prime} u_0(\mathbf{r}^{\prime \prime}) \exp\left\{ ik \left[ \frac{(\mathbf{r}^\prime)^2}{2}\left( \frac{1}{z_1} + \frac{1}{z_2} - \frac{1}{f} \right) +\frac{(\mathbf{r}^{\prime \prime})^2}{2z_1} - \mathbf{r}^\prime \cdot \left( \frac{\mathbf{r}}{z_2} + \frac{\mathbf{r}^{\prime \prime}}{z_1} \right) \right] \right\}
+\end{equation}
+
+We get an imaging configuration when the distances $z_1$ and $z_2$ satisfy the lens equation
+\begin{equation}
+    \frac{1}{z_1} + \frac{1}{z_2} = \frac{1}{f}.
+\end{equation}
+In this case, the expression for the output field simplifies to
+\begin{equation}
+    u(\mathbf{r}) = -\frac{e^{i k \mathbf{r}^2 / 2 z_2}}{\lambda^2 z_1 z_2}  \int_{\mathbb{R}^4} d^2\mathbf{r}^\prime d^2\mathbf{r}^{\prime \prime} u_0(\mathbf{r}^{\prime \prime}) \exp\left\{ ik \left[  +\frac{(\mathbf{r}^{\prime \prime})^2}{2z_1} - \mathbf{r}^\prime \cdot \left( \frac{\mathbf{r}}{z_2} + \frac{\mathbf{r}^{\prime \prime}}{z_1} \right) \right] \right\}.
+\end{equation}
+We can now perform the integral over $\mathbf{r}^\prime$, which gives a delta function. We then obtain
+\begin{equation}
+    \int_{\mathbb{R}^2} d\mathbf{r}^\prime e^{-ik \mathbf{r}^\prime \cdot \left( \frac{\mathbf{r}}{z_2} + \frac{\mathbf{r}^{\prime \prime}}{z_1} \right)} = (2 \pi)^2 \delta^2 \left[ k \left( \frac{\mathbf{r}}{z_2} + \frac{\mathbf{r}^{\prime \prime}}{z_1} \right) \right] = \lambda^2z_1^2 \delta^2\left( \mathbf{r}^{\prime \prime} - \frac{\mathbf{r}}{m}  \right).
+\end{equation}
+Here, we have introduced the magnification $m = -z_2 / z_1$, which indicates how much larger (or smaller) the image is compared to the object. It is negative because the image formed by a single lens is inverted with respect to the object. We have also used the relation $k = 2 \pi / \lambda$ and the delta function scaling property $\delta(a x) = \delta(x) / |a|$. By substituting this result back into the expression for the output field, we find that
+\begin{equation}
+    u(\mathbf{r}) = \frac{e^{-ik\mathbf{r}^2/mf}}{m} u_0\left(\frac{\mathbf{r}}{m}\right).
+\end{equation}
+
+We see that, apart from a quadratic phase factor, the output field is a scaled version of the input field. This shows that the lens is able to form an image of the input field at the output plane, with a magnification given by $m = -z_2 / z_1$.
+
+\subsection{Fourier Transform Configuration}
+
+For this configuration, we will express $u_1$ in terms of $u_0$ using the angular spectrum method for the first propagation step, which gives
+\begin{equation}
+    u(\mathbf{r}) = \frac{e^{i k \mathbf{r}^2 / 2 z_2}}{2\pi i \lambda z_2} \int_{\mathbb{R}^2} d^2\mathbf{r}^\prime d^2 \mathbf{q}  \tilde{u}_0(\mathbf{q}) \exp\left\{ i \left[ \frac{(k\mathbf{r}^\prime)^2}{2} \left(\frac{1}{z_2} - \frac{1}{f}\right) + \frac{z_1 \mathbf{q}^2}{2k} + \mathbf{r}^\prime \cdot \left( \mathbf{q} - \frac{k\mathbf{r} }{z_2} \right) \right]  \right\}  .
+\end{equation}
+
+We get a Fourier transform configuration when $z_2 = f$, while $z_1$ can take any value. In this case, the expression for the output field simplifies to
+\begin{equation}
+    u(\mathbf{r}) = \frac{e^{i k \mathbf{r}^2 / 2 f}}{2\pi i \lambda f} \int_{\mathbb{R}^2} d^2\mathbf{r}^\prime d^2 \mathbf{q}  \tilde{u}_0(\mathbf{q}) \exp\left\{ i \left[ \frac{z_1 \mathbf{q}^2}{2k} + \mathbf{r}^\prime \cdot \left( \mathbf{q} - \frac{k\mathbf{r} }{f} \right) \right]  \right\}  .
+\end{equation}
+
+Once again, we can perform the integral over $\mathbf{r}^\prime$, which gives a delta function. We then obtain
+\begin{equation}
+    \int_{\mathbb{R}^2} d\mathbf{r}^\prime e^{i \mathbf{r}^\prime \cdot \left( \mathbf{q} - \frac{k\mathbf{r} }{f} \right)} = (2 \pi)^2 \delta^2 \left( \mathbf{q} - \frac{k\mathbf{r}}{f} \right).
+\end{equation}
+By substituting this result back into the expression for the output field, we find that
+\begin{equation}
+    \label{eq:fourier_transform_property}
+    u(\mathbf{r}) = \frac{e^{i k \mathbf{r}^2(1 - z_1/f) / 2 f}}{ik f}  \tilde{u}_0\left( \frac{k\mathbf{r}}{f} \right).
+\end{equation}
+We then see that, apart from a quadratic phase factor, the output field is proportional to the Fourier transform of the input field evaluated at spatial frequencies $\mathbf{q} = k \mathbf{r} / f$. This shows that the lens is able to perform a Fourier transform of the input field at the output plane when placed at its focal length. Furthermore, this quadratic phase factor becomes unity when $z_1 = f$.
+
+\begin{exe}{The $4f$ system}
+
+    Consider a system composed of two lenses of focal lengths $f_1$ and $f_2$ separated by a distance $f_1 + f_2$. Show that, when an input field $u_0(\mathbf{r})$ is placed at a distance $f_1$ before the first lens, the output field $u(\mathbf{r})$ at a distance $f_2$ after the second lens is given by
+    \begin{equation}
+        u(\mathbf{r}) = \frac{1}{m} u_0\left( \frac{\mathbf{r}}{m}  \right), \ m = -f_2/f_1.
+    \end{equation}
+    This configuration is known as a $4f$ system and is commonly used in optical processing setups. Tip: apply \eqref{eq:fourier_transform_property} twice.
+\end{exe}
+
+\bibliographystyle{unsrt}
+\bibliography{../refs}
+
+
+\end{document}
