@@ -33,7 +33,7 @@
 \maketitle
 
 \begin{abstract}
-We develop diffraction-limited design rules for a free-space optical link with finite transmitter and receiver apertures. An uncertainty-relation argument establishes the characteristic aperture scale $\sqrt{\lambda z}$, and a Gaussian-beam calculation yields the target-efficiency criterion $\sqrt{D_tD_r}>D_c(\eta_0)$. We then show how a displaced $4f$ transmitting telescope independently controls beam size and wavefront curvature. Finally, numerical paraxial propagation through finite circular pupils quantifies the departure from the all-Gaussian approximation and identifies the practical beam size and alignment for available telescope pairs. For the 810 nm, 6.8 km UFF--CBPF link, the numerical optimum shifts agree closely with the Gaussian prediction, while finite transmitter clipping can substantially reduce the attainable efficiency.
+We develop diffraction-limited design rules for a free-space optical link with finite transmitter and receiver apertures. An uncertainty-relation argument establishes the characteristic aperture scale $\sqrt{\lambda z}$, and a Gaussian-beam calculation gives the practical $98\%$ efficiency criterion $\sqrt{D_tD_r}>D_{98}\approx1.71\sqrt{\lambda z}$, where $D_t$ and $D_r$ are the transmitter and receiver diameters. We then show how a displaced $4f$ transmitting telescope independently controls beam size and wavefront curvature. Finally, numerical paraxial propagation through finite circular pupils quantifies the departure from the all-Gaussian approximation and identifies the practical beam size and alignment for available telescope pairs. For the proposed UFF--CBPF link at $\lambda=810$ nm over 6.8 km, $D_{98}\approx12.7$ cm; the numerical optimum shifts agree closely with the Gaussian prediction, while finite transmitter clipping can substantially reduce the attainable efficiency.
 \end{abstract}
 
 \section{Introduction}
@@ -102,7 +102,9 @@ This relation leads directly to a rule for selecting the transmitter and receive
 \end{equation}
 The uncertainty relation alone does not select an individual transmitter width: when the product $W_0W$ is minimized by choosing $F_0=z$, one may still choose $W_0$ freely and obtain the corresponding receiver width $W$. The finite apertures break this freedom. A larger $W_0$ reduces diffraction at the receiver but increases transmitter clipping, whereas a smaller $W_0$ has the opposite effect. Their competing losses therefore select an optimal launch width.
 
-Let $\eta_{\mathrm{tot}} = \eta(D_t,W_0)\eta(D_r,W)$ be the overall transmission efficiency due to clipping at the transmitter and receiver. Defining
+To calculate this trade-off analytically, we now make the all-Gaussian approximation: the field is assumed to remain Gaussian after passing through the transmitter aperture. This is accurate when transmitter clipping is small, but becomes only an approximation when the pupil substantially truncates the beam. Within this approximation, let $\eta_{\mathrm{tot}} = \eta(D_t,W_0)\eta(D_r,W)$ be the overall transmission efficiency due to clipping at the transmitter and receiver. The finite-pupil numerical calculation in Sec.~\ref{sec:telescope_clipping} removes this assumption.
+
+Defining
 \begin{equation}
     x = \frac{D_t^2}{2W_0^2}, \qquad y = \frac{D_r^2}{2W^2},
 \end{equation}
@@ -147,9 +149,9 @@ For the UFF--CBPF link, $\lambda = 810$ nm and $z = 6.8$ km, so $D_{98} \approx 
 
 \section{Control of transmitter parameters}
 
-We now show how a transmitting telescope can control both the spot size $W_0$ and the wavefront curvature $F_0$. Let a telescope be formed by two lenses of focal lengths $f_1$ and $f_2$. In the $(x,p)^T$ convention used above, the free-propagation matrix $P(d)$ and a thin lens are represented by
+We now show how a transmitting telescope can control both the spot size $W_0$ and the wavefront curvature $F_0$. Let a telescope be formed by two lenses of focal lengths $f_1$ and $f_2$. In the $(x,p)^T$ convention used above, the free-propagation matrix $P(z)$ and a thin lens are represented by
 \begin{equation}
-    P(d) = \begin{pmatrix} 1 & d \\ 0 & 1 \end{pmatrix}, \qquad
+    P(z) = \begin{pmatrix} 1 & z \\ 0 & 1 \end{pmatrix}, \qquad
     L(f) = \begin{pmatrix} 1 & 0 \\ -1/f & 1 \end{pmatrix}.
 \end{equation}
 Propagation by one focal length on either side of a lens gives a Fourier-transform system,
@@ -194,6 +196,7 @@ For a collimated input beam, $1/F_{\mathrm{in}}=0$ (equivalently, $F_{\mathrm{in
 The width of this interval, $2f_2^2/z$, gives the characteristic scale for the axial alignment sensitivity of the telescope: displacements outside it no longer improve the receiver spot size relative to the collimated case. The optimum value is $\Delta z = f_2^2/z$, for which $F_0=z$ and $\Theta_0=0$; maintaining a displacement close to this value is therefore required to obtain the largest improvement. The sign of $m$ represents image inversion and does not affect a circularly symmetric Gaussian beam. These results assume that the beam can still be treated as Gaussian after passing through the transmitter pupil; the next section tests that approximation.
 
 \section{Telescope clipping}
+\label{sec:telescope_clipping}
 
 The preceding analysis treats clipping analytically by assuming that the beam remains Gaussian at both terminals. This is only an approximation: after the finite transmitter pupil clips the beam, its propagated field is no longer Gaussian, and the Gaussian aperture-efficiency formula at the receiver no longer applies exactly. We therefore evaluate the finite-aperture system numerically for the available telescope pairs. The calculation applies the circular transmitter and receiver pupils to the field and uses paraxial Fourier propagation over the full link. The reported end-to-end clipping efficiency is the power collected by the receiver divided by the power in the unclipped input Gaussian; it therefore includes clipping at both terminals.
 
@@ -227,6 +230,8 @@ For the simulated transmitting telescopes, $f_2=660$ mm for the 102 mm Svbony an
 The analytical and numerical results separate the design problem into complementary parts. The quantity $D_{98}$ provides a rapid aperture-level screening criterion: a pair with $\rho_{98}$ close to one is near the aperture product required by the all-Gaussian model for 98\% efficiency. In the present set of telescopes, the 102 mm--154 mm pair has $\rho_{98}=0.987$ and reaches a simulated efficiency of 0.971, whereas the smaller 52 mm transmitter remains far below the same aperture scale even when paired with the larger receiver.
 
 The numerical calculation also clarifies which Gaussian predictions remain reliable after clipping. The optimum telescope shifts $\Delta z_{\mathrm{sim}}^\star$ are close to $f_2^2/z$, so the Gaussian wavefront-curvature analysis remains a useful alignment guide. In contrast, the all-Gaussian efficiency estimate can overstate the throughput when transmitter clipping is appreciable, because the hard pupil creates diffraction structure that is not described by a single Gaussian spot size. The numerical optimum $W_{0,\mathrm{sim}}^\star$ should therefore be used for setting the transmitted beam whenever clipping is non-negligible.
+
+This discrepancy also has a direct uncertainty-relation interpretation. The all-Gaussian calculation assumes a minimum-uncertainty field, which can attain the equality in the diffraction width product. A hard transmitter pupil converts this field into a truncated Gaussian, which is no longer a minimum-uncertainty state and has an increased effective beam-quality factor. The resulting diffraction sidelobes further reduce the power collected by a finite receiver aperture. Although this argument explains why the all-Gaussian result is optimistic, the full spatial profile is needed to predict the efficiency quantitatively, motivating the numerical propagation.
 
 The present model is deliberately limited to scalar paraxial propagation, circular hard pupils, and perfect optical alignment apart from the controlled axial shift. Atmospheric turbulence, pointing fluctuations, aberrations, obscurations, detector coupling, and other implementation losses will further affect an experimental link. These effects can be incorporated in the same numerical framework once their parameters are specified.
 
