@@ -1,0 +1,64 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{amsmath, amsfonts, amssymb, physics}
+\usepackage{revsymb}
+
+\usepackage{amsmath,amsfonts,amsthm,physics,braket,indentfirst}
+\usepackage{float}
+
+\usepackage[a4paper,
+            left=3cm,
+            right=3cm,
+            top=3cm,
+            bottom=3cm]{geometry}
+
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,       	
+	linkcolor=blue,          	
+	citecolor=blue,        		
+	urlcolor=blue}
+\usepackage{url}
+
+\newtheorem{alg}{Algorithm}
+\newtheorem{exe}{Exercise}
+
+\title{Synchronization}
+\author{M. Gil de Oliveira}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Consider the following model for the synchronization between two separated parties $j = 1,2$: each site has a clock which ticks at a rate $f_j$. They believe their clocks are very close to a certain frequency $f_0$ (in our case, $f_0 = 10\text{MHz}$), but, actually, there is a frequency difference $\Delta f = f_2 - f_1$ which is tiny but not negligible.
+
+For an event that happens at a certain time $t$, each party does not measure $t$ directly, but the amount of clock ticks
+\begin{equation}
+    N_j = f_j t \approx f_0 t
+\end{equation}
+Imposing that $t$ is the same at both sites leads us to the relation
+\begin{equation}
+    \frac{N_1}{f_1} = \frac{N_2}{f_2}
+\end{equation}
+
+Defining the delay $\tau = (N_2 - N_1) / f_0$, we may write
+\begin{equation}
+    \tau = \frac{\Delta f}{f_1}\frac{N_1}{f_0} = \frac{\Delta f}{f_0} t.
+\end{equation}
+More generally, when $\Delta f(t)$ is a function of $t$, we can express this rule as either
+\begin{equation}
+    \tau (t) = \int_{0}^{t} \frac{\Delta f(s)}{f_0} ds
+\end{equation}
+or
+\begin{equation}
+    \frac{d \tau}{dt} =  \frac{\Delta f(t)}{f_0}.
+\end{equation}
+In either case, we see that $\frac{\Delta f(t)}{f_0}$ is the quantity governing the clock drift.
+
+\section{Experiment}
+
+\end{document}

@@ -20,3 +20,5 @@ wheels/
 *.synctex.gz
 
 *plots
+
+*.DS_Store
