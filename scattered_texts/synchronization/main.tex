@@ -24,7 +24,7 @@
 \newtheorem{alg}{Algorithm}
 \newtheorem{exe}{Exercise}
 
-\title{Synchronization}
+\title{Clock Synchronization with Independent GPSDOs}
 \author{M. Gil de Oliveira}
 \date{\today}
 
@@ -32,33 +32,68 @@
 
 \maketitle
 
-\section{Introduction}
+\begin{abstract}
+Independent GPS-disciplined oscillators (GPSDOs) can introduce a residual relative frequency offset that causes the coincidence peak between two time taggers to drift. We derive the relation between this drift and the fractional frequency difference, and test it by comparing time-tagger measurements with direct frequency measurements from a Moku:Pro Phasemeter. The two measurement paths agree closely: after three hours, their relative-delay estimates differ by only $4$~ns. The observed average drift of approximately $0.1$~ns/s, and a worst case of $0.4$~ns/s, are consistent with residual frequency differences of $1$~mHz and $4$~mHz, respectively, at a nominal clock frequency of $10$~MHz. For a $10$~ns coincidence window, the worst-case drift reaches the $5$~ns half-window limit after approximately $12.5$~s.
+\end{abstract}
 
-Consider the following model for the synchronization between two separated parties $j = 1,2$: each site has a clock which ticks at a rate $f_j$. They believe their clocks are very close to a certain frequency $f_0$ (in our case, $f_0 = 10\text{MHz}$), but, actually, there is a frequency difference $\Delta f = f_2 - f_1$ which is tiny but not negligible.
+\section{Motivation and Scope}
 
-For an event that happens at a certain time $t$, each party does not measure $t$ directly, but the amount of clock ticks
-\begin{equation}
-    N_j = f_j t \approx f_0 t
-\end{equation}
-Imposing that $t$ is the same at both sites leads us to the relation
-\begin{equation}
-    \frac{N_1}{f_1} = \frac{N_2}{f_2}
-\end{equation}
+During coincidence-counting tests, we observed that the coincidence peak drifts when two independent GPS-disciplined oscillators (GPSDOs) synchronize the time taggers. This note investigates whether a residual frequency difference between the two GPSDO outputs explains that drift. Such a difference may arise from the quartz oscillators and from their respective disciplining control loops.
 
-Defining the delay $\tau = (N_2 - N_1) / f_0$, we may write
-\begin{equation}
-    \tau = \frac{\Delta f}{f_1}\frac{N_1}{f_0} = \frac{\Delta f}{f_0} t.
-\end{equation}
-More generally, when $\Delta f(t)$ is a function of $t$, we can express this rule as either
-\begin{equation}
-    \tau (t) = \int_{0}^{t} \frac{\Delta f(s)}{f_0} ds
-\end{equation}
-or
-\begin{equation}
-    \frac{d \tau}{dt} =  \frac{\Delta f(t)}{f_0}.
-\end{equation}
-In either case, we see that $\frac{\Delta f(t)}{f_0}$ is the quantity governing the clock drift.
+\section{Relative Clock-Drift Model}
 
-\section{Experiment}
+Consider the following model for the synchronization between two separated parties, which we call Alice and Bob: each of them believes they have a clock which ticks at a frequency $f_0$, but the actual frequencies are $f_A$ and $f_B$.
+
+Assume that they want to measure the time interval $\Delta t$ between two given events. The number of clock ticks measured by either party is
+\begin{equation}
+    N_j = f_j \Delta t, \ j=A,B,
+\end{equation}
+which leads them to assigning the incorrect interval
+\begin{equation}
+    \overline{\Delta t}_j = \frac{N_j}{f_0} = \frac{f_j}{f_0} \Delta t.
+\end{equation}
+We define the relative delay as Bob's reported interval minus Alice's reported interval,
+\begin{equation}
+    \tau = \overline{\Delta t}_B - \overline{\Delta t}_A = \frac{\Delta f}{f_0} \Delta t
+\end{equation}
+where $\Delta f = f_B - f_A$. Thus, a positive $\Delta f$ means that Bob's timestamps advance with respect to Alice's.
+
+This relation assumes that the frequency difference $\Delta f$ stays constant between the two events. More generally, we can put it in its differential form
+\begin{equation}
+    \label{eq:differential}
+    \frac{d \tau}{dt} =  \frac{\Delta f(t)}{f_0},
+\end{equation}
+or its integral form
+\begin{equation}
+    \label{eq:integral}
+    \tau (t) = \tau(0) + \int_{0}^{t} \frac{\Delta f(s)}{f_0} ds.
+\end{equation}
+In either case, we see that $\frac{\Delta f(t)}{f_0}$ is the quantity governing the relative clock drift.
+
+\section{Experimental Validation}
+
+To test the model, we used a function generator to produce a 1~kHz square-wave signal, which provides the events used in the coincidence counting. This signal is divided and sent to both time taggers. Each tagger is connected to a GPSDO unit which provides a clock with advertised frequency $f_0 = 10$~MHz. The time taggers measure $\tau(t)$ by following the center of the coincidence peak. Each peak-position estimate is obtained from a $1$~s acquisition, so the time-tagger delay trace consists of one-second measurements. We also divide both clock signals and send them to the Moku:Pro Phasemeter, which directly measures $\Delta f(t)$. We infer $\tau(t)$ from the Moku:Pro data by integrating this frequency difference according to \eqref{eq:integral}, using the same initial condition as the time-tagger trace. Conversely, we infer $\Delta f(t)$ from the time-tagger trace using its fitted local slope, according to \eqref{eq:differential}. Agreement between these two measurement paths would show that the residual frequency difference between the GPSDO outputs explains the observed drift.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{plots/relative_clock_drift.pdf}
+    \caption{Comparison between the relative delay and frequency difference measured by the time taggers and by the Moku:Pro Phasemeter. The relative delay inferred from the Moku:Pro data is obtained by integrating its measured frequency difference with the same initial condition as the time-tagger trace. The frequency difference inferred from the time-tagger data is obtained from the fitted local slope of the relative-delay trace.}
+    \label{fig:exp_data}
+\end{figure}
+
+Figure \ref{fig:exp_data} shows the result. The top plot compares $\tau(t)$ measured directly by the time tagger with the value inferred from the Moku:Pro; the bottom plot compares $\Delta f(t)$ inferred from the time tagger with the value measured directly by the Moku:Pro. The two measurement paths agree closely in both cases. After three hours, their relative-delay estimates differ by only $4$~ns.
+
+The average relative drift during the three-hour measurement was approximately $0.1$~ns/s, corresponding to a frequency shift of $1$~mHz. The worst case was $0.4$~ns/s, corresponding to $4$~mHz.
+
+\section{Conclusion and Synchronization Trade-offs}
+
+The agreement between the time-tagger and Moku:Pro measurements shows that the residual frequency difference between independent GPSDO outputs explains the observed coincidence-peak drift. Our coincidence peak is around $2$~ns wide. The coincidence windows used in related experiments are wider: $7$~ns in \cite{Resch:05}, $10$~ns in \cite{seward1991daylight}, and $20$~ns in \cite{peng2005experimental}. Peak width and coincidence-window width describe different quantities; nevertheless, these windows provide useful application-specific timing tolerances.
+
+If the peak center is required to remain within half of a full coincidence window, the allowable relative-delay shifts are $3.5$~ns, $5$~ns, and $10$~ns, respectively. At the average drift measured here, $0.1$~ns/s, these limits are reached after approximately $35$~s, $50$~s, and $100$~s. At the worst-case drift of $0.4$~ns/s, the corresponding conservative re-alignment intervals are approximately $8.8$~s, $12.5$~s, and $25$~s.
+
+For applications requiring longer intervals between re-alignment, a higher-stability reference can reduce the drift. The rubidium-clock implementation reported in \cite{Resch:05} achieved a relative drift of $0.05$~ns/s, a factor of two below the average drift measured here and a factor of eight below the observed worst case. If this performance were achieved in the present setup, the three re-alignment intervals above would double to approximately $70$~s, $100$~s, and $200$~s. This is a performance benchmark rather than a guaranteed improvement, since the achieved stability also depends on implementation details and the measurement interval. A rubidium reference offers potentially lower drift at the cost of substantially higher hardware expense than the quartz-based oscillators used in the GPSDOs; the choice of reference should therefore be guided by the required coincidence-timing precision and the available cost budget.
+
+\bibliographystyle{unsrt}
+\bibliography{../../refs}
 
 \end{document}
