@@ -1,30 +1,21 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage{amsmath, amsfonts, amssymb, physics}
-\usepackage{revsymb}
 
-\usepackage{amsmath,amsfonts,amsthm,physics,braket,indentfirst}
-\usepackage{float}
-
+\usepackage{amsmath,amssymb,physics}
 \usepackage[a4paper,
             left=3cm,
             right=3cm,
             top=3cm,
             bottom=3cm]{geometry}
-
-\usepackage{graphicx}
-
 \usepackage{hyperref}
+
 \hypersetup{
-	colorlinks=true,       	
-	linkcolor=blue,          	
-	citecolor=blue,        		
-	urlcolor=blue}
-\usepackage{url}
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
 
-\newtheorem{alg}{Algorithm}
-\newtheorem{exe}{Exercise}
-
-\title{Coincidence Counting}
+\title{Coincidence-Window and Source-Brightness Tradeoffs in Free-Space QKD Links}
 \author{M. Gil de Oliveira}
 \date{\today}
 
@@ -32,8 +23,396 @@
 
 \maketitle
 
+\begin{abstract}
+This report examines how the coincidence-window width and SPDC pair-generation rate affect coincidence recovery in a lossy, background-limited free-space QKD link.  Starting from a finite-window description of second-order coherence, it relates the measured coincidence rates to the coincidence signal-to-noise ratio (SNR), coincidence-to-accidental ratio (CAR), and accidental-limited CHSH visibility.  Particular attention is given to the distinction between the selected digital coincidence window and the measured timing-peak width, including broadening caused by detector jitter and relative-clock wander.  For a Gaussian timing peak in the high-background regime, the SNR-optimal window is approximately $1.19$ times the peak FWHM, whereas CAR favors narrower windows but approaches a finite limit.  Increasing source brightness improves SNR up to saturation while reducing CAR and Bell visibility.  These results are intended to guide the selection of the source brightness, coincidence window, and acquisition-block duration; the appropriate operating point ultimately depends on whether the priority is peak detection, correlation quality, Bell violation, or secure-key generation.
+\end{abstract}
+
 \section{Introduction}
 
+Consider an SPDC source whose photons are detected at two terminals connected by a free-space optical link.  The coincidence rate is reduced by propagation, collection, and detection losses, while background light and detector dark counts increase the singles rates and hence the accidental-coincidence baseline.  The measured correlation peak is further broadened by the intrinsic pair correlation time, detector jitter, and time-tagger response.
 
+The aim of this report is to quantify how these parameters affect metrics relevant to a free-space QKD link, including the coincidence signal-to-noise ratio (SNR), the coincidence-to-accidental ratio (CAR), and CHSH-inequality violations.
+
+The scope is deliberately limited to a parameter-selection model rather than a complete QKD security or secure-key-rate analysis.  Within each acquisition block, the treatment assumes stationary rates, approximately Poissonian coincidence-count statistics, and the simplified accidental-coincidence model stated below.  It does not include detector dead time and afterpulsing, basis-dependent efficiencies, double-click handling, finite-key effects, or a detailed treatment of multipair photon-number statistics.  The CHSH parameter is used as a diagnostic of accidental-limited correlation visibility, not as a device-independent security bound.
+
+Section~\ref{sec:coincidence_observables} presents the statistical model for the time-difference histograms typically measured in experiments.  Section~\ref{sec:spdc} specializes the model to a spontaneous parametric down-conversion (SPDC) source and evaluates the coincidence SNR, CAR, and CHSH visibility.  Section~\ref{sec:optimization} discusses the optimization of the measurement parameters for different figures of merit.  Finally, Section~\ref{sec:conclusion} summarizes the conclusions.
+
+\section{Coincidence observables with finite windows}
+\label{sec:coincidence_observables}
+
+Let $I_A(t)$ and $I_B(t)$ be the instantaneous photocurrents in arms $A$ and $B$.  The number of singles recorded between $t_1$ and $t_2$ is
+\begin{equation}
+    S_j(t_1,t_2)=\int_{t_1}^{t_2}I_j(t)\,dt.
+\end{equation}
+For a coincidence window of width $\tau$ centered at relative delay $t_0$, define coincidence current
+\begin{equation}
+    I_c(t,t_0,\tau)
+    =I_A(t)\int_{t_0-\tau/2}^{t_0+\tau/2}I_B(t+s)\,ds,
+\end{equation}
+so that the coincidences accumulated over $[t_1,t_2]$ are
+\begin{equation}
+    C(t_1,t_2,t_0,\tau)
+    =\int_{t_1}^{t_2}I_c(t,t_0,\tau)\,dt.
+\end{equation}
+
+Treating the photocurrents as stochastic processes, let $R_j(t)=\expval{I_j(t)}$ and define
+\begin{equation}
+    g^{(2)}_{jk}(t_1;t_2)
+    =\frac{\expval{I_j(t_1)I_k(t_2)}}
+           {\expval{I_j(t_1)}\expval{I_k(t_2)}}.
+\end{equation}
+For jointly wide-sense stationary photocurrents, the mean rates are constant and $g^{(2)}_{jk}(t_1;t_2)=g^{(2)}_{jk}(t_2-t_1)$.  The mean coincidence rate is then
+\begin{equation}
+    R_c(t_0,\tau)
+    =\expval{I_c(t_0,\tau)}
+    =R_A R_B\int_{t_0-\tau/2}^{t_0+\tau/2}g^{(2)}_{AB}(s)\,ds
+    =R_A R_B\mathcal{G}^{(2)}_{AB}(t_0,\tau),
+\end{equation}
+where
+\begin{equation}
+    \mathcal{G}^{(2)}_{AB}(t_0,\tau)
+    \equiv\int_{t_0-\tau/2}^{t_0+\tau/2}g^{(2)}_{AB}(s)\,ds
+\end{equation}
+is the second-order coherence integrated over the window.
+
+For uncorrelated photocurrents, $g^{(2)}_{AB}=1$, and the accidental-coincidence rate is
+\begin{equation}
+    \label{eq:accidental-rate}
+    R_{\mathrm{acc}}=R_A R_B\tau.
+\end{equation}
+The coincidence rate above this baseline is
+\begin{equation}
+    \label{eq:signal-rate}
+    R_{\mathrm{sig}}(t_0,\tau)
+    \equiv R_c(t_0,\tau)-R_{\mathrm{acc}}
+    =R_A R_B\,\delta\mathcal{G}^{(2)}_{AB}(t_0,\tau),
+\end{equation}
+with
+\begin{equation}
+    \delta g^{(2)}_{jk}(s)\equiv g^{(2)}_{jk}(s)-1
+\end{equation}
+and
+\begin{equation}
+    \delta\mathcal{G}^{(2)}_{AB}(t_0,\tau)
+    \equiv\mathcal{G}^{(2)}_{AB}(t_0,\tau)-\tau
+    =\int_{t_0-\tau/2}^{t_0+\tau/2}\delta g^{(2)}_{AB}(s)\,ds.
+\end{equation}
+
+Two useful normalizations follow directly:
+\begin{equation}
+    \label{eq:window-averaged-coherence}
+    \frac{R_c}{R_{\mathrm{acc}}}
+    =\frac{\mathcal{G}^{(2)}_{AB}(t_0,\tau)}{\tau}
+    =\frac{1}{\tau}
+     \int_{t_0-\tau/2}^{t_0+\tau/2}g^{(2)}_{AB}(s)\,ds
+    \equiv\overline{g}^{(2)}_{AB}(t_0,\tau)
+\end{equation}
+and
+\begin{equation}
+    \label{eq:car}
+    \mathrm{CAR}(t_0,\tau)
+    \equiv\frac{R_{\mathrm{sig}}}{R_{\mathrm{acc}}}
+    =\frac{\delta\mathcal{G}^{(2)}_{AB}(t_0,\tau)}{\tau}
+    =\overline{g}^{(2)}_{AB}(t_0,\tau)-1.
+\end{equation}
+A finite coincidence window therefore does not measure the pointwise value $g^{(2)}_{AB}(t_0)$ directly.  The measured coincidence rate $R_c$ is proportional to the integrated coherence $\mathcal{G}^{(2)}_{AB}$, while normalization by the accidental rate gives the window average $\overline{g}^{(2)}_{AB}$.  Thus, both are finite-window versions of the underlying correlation function.  Only when $\tau$ is narrow compared with the scale over which the correlation varies does $\overline{g}^{(2)}_{AB}(t_0,\tau)\approx g^{(2)}_{AB}(t_0)$.  The total-to-accidental ratio and the excess CAR differ by one.  Experimentally, each finite bin or integration window in the time-difference histogram performs this averaging: the flat component gives the accidental baseline, while integration above that baseline gives $R_{\mathrm{sig}}$.
+
+\subsection{Uncorrelated background}
+
+Let the measured photocurrent contain signal and background,
+\begin{equation}
+    I_{j,\mathrm{meas}}=I_j+I_{j,\mathrm{BG}}.
+\end{equation}
+If the backgrounds are uncorrelated with the signal photocurrents, the measured excess coherence is
+\begin{equation}
+    \label{eq:dilution-g2}
+    \delta g^{(2)}_{AB,\mathrm{meas}}(s)
+    =f_A f_B\,\delta g^{(2)}_{AB}(s),
+\end{equation}
+where
+\begin{equation}
+    f_A=\frac{R_A}{R_A+R_{A,\mathrm{BG}}},
+    \qquad
+    f_B=\frac{R_B}{R_B+R_{B,\mathrm{BG}}}
+\end{equation}
+are the signal fractions of the measured singles rates.  The same factor dilutes the integrated excess coherence.  This simple result captures an important free-space limitation: loss decreases the signal fractions when background rates remain fixed. This, in turn, reduces $\delta g^{(2)}$.
+
+\section{Performance of a free-space SPDC link}
+\label{sec:spdc}
+
+\subsection{Source, loss, and coincidence SNR}
+
+Let $\eta_A$ and $\eta_B$ be the total efficiencies in the two arms, including propagation through the link, collection, optical transmission, and detection.  Without additional background,
+\begin{equation}
+    \label{eq:spdc-singles-rates}
+    R_A=\eta_A R_{\mathrm{pair}},
+    \qquad
+    R_B=\eta_B R_{\mathrm{pair}},
+\end{equation}
+where $R_{\mathrm{pair}}$ is the pair-generation rate.  When a window $\tau_{\mathrm{full}}$ captures the entire correlation peak,
+\begin{equation}
+    \label{eq:spdc-signal-rate}
+    R_{\mathrm{sig}}(\tau_{\mathrm{full}})
+    =\eta_A\eta_B R_{\mathrm{pair}},
+\end{equation}
+and hence
+\begin{equation}
+    \label{eq:G-loss-invariance}
+    \delta\mathcal{G}^{(2)}_{AB}(\tau_{\mathrm{full}})
+    =\frac{R_{\mathrm{sig}}}{R_A R_B}
+    =\frac{1}{R_{\mathrm{pair}}}.
+\end{equation}
+Ideal linear loss therefore changes the detected singles and coincidence rates but not the integrated excess coherence.  Additional uncorrelated background spoils this invariance through the signal fractions in Eq.~\eqref{eq:dilution-g2}.
+
+Suppose that coincidence counts accumulated over a duration $T$ are approximately Poisson distributed and that the accidental baseline is known with negligible statistical uncertainty.  Taking the signal to be the coincidences above the baseline and the noise to be the standard deviation of the total coincidence count gives
+\begin{align}
+    \label{eq:snr-general}
+    \mathrm{SNR}(t_0,\tau,T)
+    &=\frac{R_{\mathrm{sig}}(t_0,\tau)T}
+            {\sqrt{R_c(t_0,\tau)T}} \\
+    &=\sqrt{R_A R_B T}\,
+      \frac{\delta\mathcal{G}^{(2)}_{AB}(t_0,\tau)}
+           {\sqrt{\mathcal{G}^{(2)}_{AB}(t_0,\tau)}}.
+\end{align}
+For a full-peak window without background, this becomes
+\begin{equation}
+    \label{eq:spdc-snr}
+    \mathrm{SNR}
+    =\sqrt{\frac{\eta_A\eta_B R_{\mathrm{pair}}T}
+                 {1+R_{\mathrm{pair}}\tau}}.
+\end{equation}
+Thus,
+\begin{equation}
+    \mathrm{SNR}\approx
+    \begin{cases}
+        \sqrt{\eta_A\eta_B R_{\mathrm{pair}}T},
+        &R_{\mathrm{pair}}\tau\ll1,\\[4pt]
+        \sqrt{\eta_A\eta_B T/\tau},
+        &R_{\mathrm{pair}}\tau\gg1.
+    \end{cases}
+\end{equation}
+Increasing the source brightness initially improves the SNR, but the improvement saturates once multipair accidentals dominate.
+
+The one-sided high-background regime is especially relevant when one photon remains local and the other traverses the free-space link.  If arm $A$ has negligible background while arm $B$ has signal rate $R_B$ and background rate $R_{B,\mathrm{BG}}$, Eqs.~\eqref{eq:snr-general} and \eqref{eq:dilution-g2} give
+\begin{align}
+    \label{eq:snr-high-background}
+    \mathrm{SNR}(t_0,\tau,T)
+    &=\frac{\sqrt{R_A T}\,R_B\,
+            \delta\mathcal{G}^{(2)}_{AB}(t_0,\tau)}
+           {\sqrt{R_{B,\mathrm{BG}}\tau
+                  +R_B\mathcal{G}^{(2)}_{AB}(t_0,\tau)}} \\
+    &\approx
+      \sqrt{\frac{R_A T}{R_{B,\mathrm{BG}}\tau}}\,
+      R_B\,\delta\mathcal{G}^{(2)}_{AB}(t_0,\tau),
+\end{align}
+where the approximation requires
+\begin{equation}
+    R_{B,\mathrm{BG}}\tau
+    \gg R_B\mathcal{G}^{(2)}_{AB}(t_0,\tau).
+\end{equation}
+For a full-peak window this reduces to
+\begin{equation}
+    \mathrm{SNR}
+    \approx\eta_B\sqrt{
+       \frac{\eta_A R_{\mathrm{pair}}T}
+            {R_{B,\mathrm{BG}}\tau}}.
+\end{equation}
+
+All these expressions assume that the timing peak remains fixed during $T$.  This assumption requires care when the terminals use independent clocks, even if both are disciplined by GPS.  Residual relative frequency offset and timing wander can move or broaden the peak as the block duration grows.  Increasing $T$ then provides more counts but may also require a wider coincidence window and admit more accidentals.  In practice, the short-block SNR must be high enough to locate the peak and estimate its delay; only then can successive blocks be aligned and safely accumulated.
+
+\subsection{Effect of accidentals on CHSH visibility}
+
+Here the CHSH parameter is used only to illustrate how uncorrelated accidental coincidences dilute a measured polarization correlation.  The model assumes unbiased outputs and an angle-independent accidental contribution.  It is not a device-independent security analysis or a substitute for a protocol-specific secret-key calculation.
+
+For a full-peak window without additional background, Eqs.~\eqref{eq:accidental-rate}, \eqref{eq:spdc-singles-rates}, and \eqref{eq:spdc-signal-rate} give
+\begin{equation}
+    \label{eq:full-peak-car}
+    \mathrm{CAR}
+    =\frac{1}{R_{\mathrm{pair}}\tau}.
+\end{equation}
+Consequently, $\overline{g}^{(2)}_{AB}=1+\mathrm{CAR}$ approaches unity when $R_{\mathrm{pair}}\tau\gg1$, meaning that coincidences between photons from different pairs dominate the selected events.
+
+CAR also determines how accidentals reduce polarization correlations.  In a polarization CHSH test, each analyzer-setting pair yields a normalized correlation $E$.  The CHSH parameter combines four such correlations.  Let the two outputs of each polarization analyzer be labeled $+$ and $-$.  At settings $(\phi_A,\phi_B)$, the measured correlation is
+\begin{equation}
+    E_{\mathrm{meas}}(\phi_A,\phi_B)
+    =\frac{
+       R_{++,\mathrm{meas}}+R_{--,\mathrm{meas}}
+       -R_{+-,\mathrm{meas}}-R_{-+,\mathrm{meas}}}
+      {R_{++,\mathrm{meas}}+R_{--,\mathrm{meas}}
+       +R_{+-,\mathrm{meas}}+R_{-+,\mathrm{meas}}},
+\end{equation}
+where all four rates are evaluated at the same analyzer settings.  Equal outcomes contribute $+1$ and different outcomes contribute $-1$.
+
+For unbiased outputs, an angle-independent accidental rate is distributed equally among the four outcome combinations:
+\begin{equation}
+    R_{jk,\mathrm{meas}}(\phi_A,\phi_B)
+    \simeq R_{jk,\mathrm{sig}}(\phi_A,\phi_B)
+    +\frac{R_{\mathrm{acc}}}{4},
+    \qquad j,k\in\{+,-\}.
+\end{equation}
+The accidental terms cancel in the numerator,
+\begin{equation}
+    \frac{R_{\mathrm{acc}}}{4}
+    +\frac{R_{\mathrm{acc}}}{4}
+    -\frac{R_{\mathrm{acc}}}{4}
+    -\frac{R_{\mathrm{acc}}}{4}=0,
+\end{equation}
+but add to $R_{\mathrm{acc}}$ in the denominator.  If
+\begin{equation}
+    R_{\mathrm{sig}}
+    =R_{++,\mathrm{sig}}+R_{--,\mathrm{sig}}
+     +R_{+-,\mathrm{sig}}+R_{-+,\mathrm{sig}},
+\end{equation}
+then
+\begin{equation}
+    E_{\mathrm{meas}}(\phi_A,\phi_B)
+    \simeq V E_{\mathrm{ideal}}(\phi_A,\phi_B),
+    \qquad
+    V=\frac{R_{\mathrm{sig}}}{R_{\mathrm{sig}}+R_{\mathrm{acc}}}
+     =\frac{\mathrm{CAR}}{1+\mathrm{CAR}}.
+\end{equation}
+
+For an ideal maximally entangled state, $S_{\mathrm{ideal}}=2\sqrt{2}$ and this simple visibility model gives
+\begin{equation}
+    S_{\mathrm{meas}}
+    \simeq V S_{\mathrm{ideal}}
+    =2\sqrt{2}\,
+     \frac{R_{\mathrm{sig}}}{R_{\mathrm{sig}}+R_{\mathrm{acc}}}.
+\end{equation}
+A CHSH violation requires $S_{\mathrm{meas}}>2$, or
+\begin{equation}
+    \label{eq:bell-car-threshold}
+    \frac{R_{\mathrm{acc}}}{R_{\mathrm{sig}}}
+    <\sqrt{2}-1.
+\end{equation}
+For multipair accidentals and a full-peak window, this becomes
+\begin{equation}
+    R_{\mathrm{pair}}\tau
+    <\sqrt{2}-1
+    \approx0.414.
+\end{equation}
+The numerical threshold is not universal: it depends on photon-number statistics, detector behavior, the handling of double detections, and the temporal-mode structure.  Its purpose here is to show why CAR is not merely a peak-detection metric; accidentals directly reduce the observable pairwise correlation.
+
+\section{Physical limits and tradeoffs of the coincidence window}
+\label{sec:optimization}
+
+Equation~\eqref{eq:full-peak-car} appears at first to suggest that the CAR can
+be made arbitrarily large simply by taking $\tau\to0$.  This conclusion is
+false because that equation assumes that the window captures the entire
+correlation peak.  Once the window becomes comparable to or narrower than the
+measured timing distribution, reducing $\tau$ also reduces the fraction of
+true pairs that is accepted.  Equivalently, the effective pair rate within the
+window is no longer $R_{\mathrm{pair}}$, but is weighted by the fraction of the
+peak captured by the window.  Resolving this apparent divergence motivates a
+careful distinction between the selected coincidence window and the measured
+width of the correlation peak.
+
+The user-selected coincidence-window width $\tau$ must be distinguished from the normalized measured pair-timing distribution $h(s;T)$.  The latter describes the relative-delay peak obtained from an acquisition block of duration $T$ after subtraction of the accidental baseline.  Its effective width is set by the intrinsic photon-pair correlation-time distribution, detector jitter, time-tagger response or resolution, synchronization jitter, and relative-clock wander during the block.  If one contribution is much broader than the others, it approximately sets the measured width.  For the remainder of this section, $T$ is fixed and the argument is suppressed: $h(s)\equiv h(s;T)$.
+
+For the ideal SPDC model and a peak centered at $s=0$, write
+\begin{equation}
+    \int_{-\infty}^{\infty}h(s)\,ds=1,
+    \qquad
+    \delta g^{(2)}_{AB}(s)=\frac{h(s)}{R_{\mathrm{pair}}},
+\end{equation}
+and define the fraction captured by a centered window:
+\begin{equation}
+    \label{eq:captured-fraction}
+    H(\tau)=\int_{-\tau/2}^{\tau/2}h(s)\,ds.
+\end{equation}
+The integrated excess coherence is
+\begin{equation}
+    \label{eq:window-integrated-excess}
+    \delta\mathcal{G}^{(2)}_{AB}(\tau)
+    =\frac{H(\tau)}{R_{\mathrm{pair}}}.
+\end{equation}
+
+In the ideal SPDC model without additional uncorrelated background,
+Eqs.~\eqref{eq:car} and \eqref{eq:window-integrated-excess} give
+\begin{equation}
+    \label{eq:window-car}
+    \mathrm{CAR}(\tau)
+    =\frac{R_{\mathrm{sig}}}{R_{\mathrm{acc}}}
+    =\frac{H(\tau)}{R_{\mathrm{pair}}\tau}.
+\end{equation}
+For a continuous timing profile,
+\begin{equation}
+    \lim_{\tau\to0}\frac{H(\tau)}{\tau}=h(0).
+\end{equation}
+The true and accidental rates therefore both decrease linearly for a very narrow window:
+\begin{equation}
+    R_{\mathrm{sig}}(\tau)
+    \sim\eta_A\eta_B R_{\mathrm{pair}}h(0)\tau,
+    \qquad
+    R_{\mathrm{acc}}(\tau)
+    =\eta_A\eta_B R_{\mathrm{pair}}^2\tau.
+\end{equation}
+Their ratio remains finite.  For a symmetric timing peak with its maximum at zero, the limiting CAR is the largest attainable:
+\begin{equation}
+    \mathrm{CAR}_{\max}
+    =\frac{h(0)}{R_{\mathrm{pair}}}.
+\end{equation}
+For a Gaussian measured timing profile,
+\begin{equation}
+    h(s)=\frac{1}{\sqrt{2\pi}\sigma}
+         \exp\!\left(-\frac{s^2}{2\sigma^2}\right),
+    \qquad
+    H(\tau)=\operatorname{erf}\!\left(
+       \frac{\tau}{2\sqrt{2}\sigma}\right).
+\end{equation}
+It follows that
+\begin{equation}
+    h(0)=\frac{1}{\sqrt{2\pi}\sigma},
+    \qquad
+    \mathrm{CAR}_{\max}
+    =\frac{1}{\sqrt{2\pi}R_{\mathrm{pair}}\sigma}
+    =\frac{2\sqrt{\ln 2/\pi}}
+           {R_{\mathrm{pair}}\,\mathrm{FWHM}}
+    \approx\frac{0.94}
+                  {R_{\mathrm{pair}}\,\mathrm{FWHM}}.
+\end{equation}
+The attainable CAR is therefore governed by the dimensionless brightness $R_{\mathrm{pair}}\sigma$ and cannot be improved indefinitely by narrowing the digital window below the measured timing peak.
+
+The SNR has a different dependence on $\tau$.  In the high-background regime,
+Eq.~\eqref{eq:snr-high-background} gives
+\begin{equation}
+    \mathrm{SNR}(\tau)\propto\frac{H(\tau)}{\sqrt{\tau}}.
+\end{equation}
+For a differentiable symmetric profile, the optimum satisfies
+\begin{equation}
+    2\tau h\!\left(\frac{\tau}{2}\right)=H(\tau).
+\end{equation}
+For the Gaussian measured timing profile defined above, the optimum is
+\begin{equation}
+    \label{eq:gaussian-window-optimum}
+    \tau_{\mathrm{opt}}
+    \approx2.80\sigma
+    \approx1.19\,\mathrm{FWHM}.
+\end{equation}
+This window captures approximately $0.838$ of the peak.  Equation~\eqref{eq:gaussian-window-optimum} is specifically the SNR optimum for a Gaussian timing profile and the high-background approximation.  For other conditions, the measured $h(s)$ should be inserted into the full SNR of Eq.~\eqref{eq:snr-general}.
+
+Source brightness produces a second, distinct optimization tradeoff.  For
+fixed efficiencies, background, timing profile, window, and acquisition time,
+increasing $R_{\mathrm{pair}}$ improves the coincidence SNR in the present
+model, although the improvement eventually saturates when multipair
+accidentals dominate.  By contrast, Eq.~\eqref{eq:window-car} shows that CAR
+decreases as $1/R_{\mathrm{pair}}$; lowering the pair rate therefore improves
+CAR and, through the accidental-limited visibility, the measured Bell
+parameter.  These objectives point in opposite directions.  A secure-key-rate
+optimization must compromise between collecting pairs rapidly enough to
+produce useful raw-key statistics and keeping the accidental fraction, and
+hence the error rate, sufficiently low for privacy amplification to leave a
+positive key.
+
+The Bell threshold in Eq.~\eqref{eq:bell-car-threshold} illustrates why CAR matters beyond detecting a peak.  In entanglement-based QKD, the same uncorrelated coincidences give essentially random outcomes and increase the quantum bit error rate, although the resulting secure-key optimum depends on the protocol and detector model.  No single window is therefore universally optimal: maximizing coincidence SNR, CAR or Bell visibility, and a QKD secure-key metric can lead to different choices of $\tau$.
+
+The integration time and window width are also coupled when the terminals use independent clocks.  A practical procedure is to choose a block duration over which the relative clock offset is approximately stable, measure $h(s;T)$ and the accidental baseline in that block, and then evaluate the desired metric over candidate windows.  The short-block SNR must support reliable peak tracking; after correcting the blockwise delay, the aligned histograms may be combined to improve statistical precision without inheriting the full long-term clock broadening.
+
+\section{Conclusions}
+\label{sec:conclusion}
+
+Coincidence performance in a free-space quantum link is controlled jointly by source brightness, link efficiency, background, timing response, clock stability, integration time, and the digital coincidence window.  Increasing brightness improves the coincidence SNR, up to saturation in the multipair-dominated regime, but reduces CAR and Bell visibility.  Decreasing brightness reverses this tradeoff but also lowers the usable coincidence rate.  A secure-key-rate optimum must therefore balance rate against correlation quality.  Narrowing the window rejects accidentals but also discards true pairs, and below the measured timing width it cannot provide arbitrarily good discrimination.
+
+For a fixed Gaussian timing distribution, CAR approaches a finite small-window limit determined by $R_{\mathrm{pair}}\sigma$.  In the high-background regime, the coincidence window that maximizes coincidence SNR is instead approximately $1.19\,\mathrm{FWHM}$.  When independent-clock wander makes $\sigma$ depend on the integration time, adequate SNR over short blocks becomes a prerequisite for locating and tracking the coincidence peak.  The appropriate values of $T$ and $\tau$ must therefore be chosen for the intended task rather than by a universal timing rule.
 
 \end{document}
