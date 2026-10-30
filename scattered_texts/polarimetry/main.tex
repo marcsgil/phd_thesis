@@ -1,0 +1,805 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{braket}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage[a4paper,margin=3cm]{geometry}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Tr}{\operatorname{Tr}}
+
+\title{Polarimetry and Measurement Bases for Entangled Photons}
+\author{M. Gil de Oliveira}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+These notes develop polarization analyzers for measurements on entangled
+photon pairs. The central task is to characterize the shared state at the
+measurement stations and choose bases adapted to its correlations.
+Wave-plate transformations provide the implementation; an ideal maximally
+entangled state supplies a useful reference, and tomography determines
+whether that description is appropriate for the apparatus.
+
+\section{Wave plates}
+
+In a birefringent material, orthogonal polarization components acquire
+different phases as they propagate. Let $\ket{0}$ and $\ket{1}$ denote the
+principal polarization axes of a wave plate. In this basis, its action is
+
+\begin{equation}
+    \overline{U}_{\phi_0,\phi_1}
+    =
+    \begin{pmatrix}
+        e^{i\phi_0} & 0 \\
+        0 & e^{i\phi_1}
+    \end{pmatrix}.
+    \label{eq:wave-plate-principal-basis}
+\end{equation}
+
+Suppose that the principal axes are rotated by an angle $\theta$ relative to
+the horizontal and vertical directions, so that
+$\ket{0}=R_\theta\ket{h}$ and $\ket{1}=R_\theta\ket{v}$. In the
+$\{\ket{h},\ket{v}\}$ basis, the rotation operator is
+
+\begin{equation}
+    R_\theta
+    =
+    \begin{pmatrix}
+        \cos\theta & -\sin\theta \\
+        \sin\theta & \cos\theta
+    \end{pmatrix},
+    \qquad
+    R_\theta^{-1}=R_\theta^\dagger=R_{-\theta}.
+    \label{eq:rotation}
+\end{equation}
+
+The wave-plate operator in the horizontal--vertical basis is therefore
+
+\begin{equation}
+    U_{\phi_0,\phi_1}(\theta)
+    =R_\theta\overline{U}_{\phi_0,\phi_1}R_{-\theta}
+    =\frac{e^{i\phi_0}+e^{i\phi_1}}{2}\I
+    +\frac{e^{i\phi_0}-e^{i\phi_1}}{2}S_{2\theta},
+    \label{eq:general-wave-plate}
+\end{equation}
+
+where
+
+\begin{equation}
+    S_\theta
+    =
+    \begin{pmatrix}
+        \cos\theta & \sin\theta \\
+        \sin\theta & -\cos\theta
+    \end{pmatrix}
+    =R_\theta Z
+    =ZR_{-\theta},
+    \qquad
+    Z=
+    \begin{pmatrix}
+        1 & 0 \\
+        0 & -1
+    \end{pmatrix}.
+    \label{eq:S-operator}
+\end{equation}
+
+This decomposition gives the useful composition rule
+
+\begin{equation}
+    S_{\theta_2}S_{\theta_1}=R_{\theta_2-\theta_1}.
+    \label{eq:S-composition}
+\end{equation}
+
+\subsection{Half-wave and quarter-wave plates}
+
+For a half-wave plate (HWP), we choose $\phi_0=0$ and $\phi_1=\pi$.
+Equation~\eqref{eq:general-wave-plate} then yields
+
+\begin{equation}
+    U^{\lambda/2}_\theta=S_{2\theta}.
+    \label{eq:hwp}
+\end{equation}
+
+For a quarter-wave plate (QWP), we choose $\phi_0=-\pi/4$ and
+$\phi_1=\pi/4$. With this global-phase convention,
+
+\begin{equation}
+    U^{\lambda/4}_\theta
+    =\frac{1}{\sqrt{2}}\left(\I-iS_{2\theta}\right),
+    \qquad
+    \left(U^{\lambda/4}_\theta\right)^\dagger
+    =\frac{1}{\sqrt{2}}\left(\I+iS_{2\theta}\right).
+    \label{eq:qwp}
+\end{equation}
+
+\section{Quarter-wave-plate--half-wave-plate analyzer}
+
+Consider an analyzer consisting of a QWP at angle $\theta_1$, followed by an
+HWP at angle $\theta_2$ and a polarizing beam splitter (PBS). The wave plates
+apply the unitary
+
+\begin{equation}
+    U_w=U^{\lambda/2}_{\theta_2}U^{\lambda/4}_{\theta_1}.
+    \label{eq:analyzer-unitary}
+\end{equation}
+
+Detection at the horizontal output of the PBS realizes a projection onto the
+state
+
+\begin{align}
+    \ket{\psi_{\theta_1,\theta_2}}
+    &=U_w^\dagger\ket{h} \notag\\
+    &=\frac{1}{\sqrt{2}}
+      \left(\I+iS_{2\theta_1}\right)S_{2\theta_2}\ket{h} \notag\\
+    &=\frac{1}{\sqrt{2}}
+      \left[S_{2\theta_2}+iR_{2(\theta_1-\theta_2)}\right]\ket{h}.
+    \label{eq:analyzer-state-compact}
+\end{align}
+
+Because $Z\ket{h}=\ket{h}$, Eq.~\eqref{eq:S-operator} implies
+$S_\theta\ket{h}=R_\theta\ket{h}$. Hence the analyzer state can be written
+explicitly as
+
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+        \ket{\psi_{\theta_1,\theta_2}}
+        =\frac{1}{\sqrt{2}}\big[&
+        \left(\cos 2\theta_2
+        +i\cos 2(\theta_1-\theta_2)\right)\ket{h}\\
+        {}+&\left(\sin 2\theta_2
+        +i\sin 2(\theta_1-\theta_2)\right)\ket{v}\big].
+    \end{aligned}}
+    \label{eq:analyzer-state}
+\end{equation}
+
+\subsection{Standard polarimetry settings}
+
+A polarization measurement is obtained by recording optical power or photon
+counts at the PBS outputs. Varying $\theta_1$ and $\theta_2$ selects the six states commonly
+used for polarization tomography. Define
+
+\begin{equation}
+    \ket{d}=\frac{\ket{h}+\ket{v}}{\sqrt{2}},
+    \quad
+    \ket{a}=\frac{\ket{h}-\ket{v}}{\sqrt{2}},
+    \quad
+    \ket{r}=\frac{\ket{h}-i\ket{v}}{\sqrt{2}},
+    \quad
+    \ket{l}=\frac{\ket{h}+i\ket{v}}{\sqrt{2}}.
+    \label{eq:polarization-states}
+\end{equation}
+
+With the phase convention of Eq.~\eqref{eq:qwp}, convenient analyzer settings
+are
+
+\begin{alignat}{3}
+    \ket{\psi_{0,0}}             &=e^{i\pi/4}\ket{h},
+    &\qquad
+    \ket{\psi_{0,\pi/4}}        &=e^{-i\pi/4}\ket{v}, \notag\\
+    \ket{\psi_{\pi/4,\pi/8}}   &=e^{i\pi/4}\ket{d},
+    &
+    \ket{\psi_{\pi/4,3\pi/8}} &=-e^{-i\pi/4}\ket{a}, \notag\\
+    \ket{\psi_{0,\pi/8}}       &=e^{i\pi/4}\ket{r},
+    &
+    \ket{\psi_{0,3\pi/8}}      &=e^{i\pi/4}\ket{l}.
+    \label{eq:tomography-settings}
+\end{alignat}
+
+The phase factors in Eq.~\eqref{eq:tomography-settings} do not affect the
+corresponding projectors or measured powers.
+
+\section{The shared polarization state}
+
+The starting point of a Bell experiment is the two-photon state delivered to
+the measurement stations. A fiber between the source and one station may
+change the polarization bases without reducing the entanglement. It is
+therefore useful to characterize the delivered state first and then select
+measurement bases adapted to its correlations. Identifying which part of a
+basis mismatch originated in the source and which in propagation is not
+necessary for this purpose.
+
+We label the local and traveling photons $L$ and $T$, respectively, and use
+the same horizontal--vertical convention in each arm. The reference Bell
+state is
+\begin{equation}
+    \ket{\Phi^+}
+    =\frac{\ket h_L\ket h_T+\ket v_L\ket v_T}{\sqrt{2}}.
+    \label{eq:spdc-bell-state}
+\end{equation}
+This is a reference for describing the correlations, rather than an
+assumption about the state produced by the apparatus.
+
+\subsection{Maximally entangled states and relative polarization bases}
+
+Every pure maximally entangled two-qubit state can be written as
+$(A\otimes B)\ket{\Phi^+}$ for suitable local unitaries. The identity
+\begin{equation}
+    (A\otimes\I)\ket{\Phi^+}
+    =(\I\otimes A^{\mathsf T})\ket{\Phi^+}
+    \label{eq:bell-transpose-identity}
+\end{equation}
+then gives the equivalent representation
+\begin{equation}
+    \boxed{\ket{\Psi_U}=(\I\otimes U)\ket{\Phi^+}},
+    \qquad U=BA^{\mathsf T}.
+    \label{eq:shared-state}
+\end{equation}
+All transposes and complex conjugates in these notes refer to the $h/v$
+basis. The unitary $U$ is defined up to an irrelevant overall phase and
+describes the relative polarization bases of the pair. If the source has
+relative transformation $U_s$ and the traveling photon crosses a unitary
+fiber $U_f$, the delivered state has $U=U_fU_s$. An additional local
+transformation $U_L$ changes this to $U=U_fU_sU_L^{\mathsf T}$.
+
+This description is exact for pure maximally entangled states. A measured
+mixed or nonmaximally entangled state should instead be represented by its
+density matrix $\rho_{LT}$; it must not be forced into
+Eq.~\eqref{eq:shared-state} without checking the approximation.
+
+\subsection{Perfectly correlated bases}
+
+The reference state obeys
+\begin{equation}
+    (X\otimes X)\ket{\Phi^+}=\ket{\Phi^+},
+    \qquad
+    (Z\otimes Z)\ket{\Phi^+}=\ket{\Phi^+}.
+\end{equation}
+Consequently, the state in Eq.~\eqref{eq:shared-state} satisfies
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+        (X\otimes UXU^\dagger)\ket{\Psi_U}&=\ket{\Psi_U},\\
+        (Z\otimes UZU^\dagger)\ket{\Psi_U}&=\ket{\Psi_U}.
+    \end{aligned}}
+    \label{eq:matched-axes}
+\end{equation}
+Thus a local $H/V$ measurement is perfectly correlated with the remote
+basis $\{U\ket h,U\ket v\}$, and a local $D/A$ measurement is perfectly
+correlated with $\{U\ket d,U\ket a\}$. The remote states need not be linear
+in the laboratory frame.
+
+These are examples of a continuous family of correlated bases. For any
+qubit polarization observable $A=\boldsymbol{n}\cdot\boldsymbol{\sigma}$
+with unit vector $\boldsymbol n$,
+\begin{equation}
+    (A\otimes UA^{\mathsf T}U^\dagger)\ket{\Psi_U}
+    =\ket{\Psi_U}.
+    \label{eq:general-matched-observable}
+\end{equation}
+Equivalently, selecting $\ket b$ locally prepares $U\ket{b^*}$ remotely.
+The conjugation is immaterial for linear states, whose amplitudes can be
+chosen real, but is essential for elliptical states. In particular,
+$\ket{\Phi^+}$ is anticorrelated in $Y/Y$, since $Y^{\mathsf T}=-Y$.
+There is no unique preferred pair of measurement bases: choosing axes at
+one station fixes the corresponding axes at the other.
+
+\section{Correlations and Bell-test measurement settings}
+
+In these notes, a Bell test means separate local polarization measurements
+whose correlations enter a Bell inequality. A Bell-state measurement,
+which jointly distinguishes states in an entangled basis, is a different
+operation.
+
+For observables $A_i$ and $B_j$ with outcomes $\pm1$, define the
+Clauser--Horne--Shimony--Holt (CHSH) combination
+\begin{equation}
+    S=E_{00}+E_{01}+E_{10}-E_{11},
+    \qquad E_{ij}=\Tr\!\left[\rho_{LT}(A_i\otimes B_j)\right].
+    \label{eq:chsh}
+\end{equation}
+The local hidden-variable bound is $|S|\leq2$. Perfect correlations along
+two matching axes are useful for calibration but are not themselves the
+four settings of an optimal CHSH test.
+
+For $\ket{\Psi_U}$, one convenient choice is
+\begin{equation}
+    \begin{aligned}
+        A_0&=Z,& A_1&=X,\\
+        B_0&=U\frac{Z+X}{\sqrt{2}}U^\dagger,
+        &B_1&=U\frac{Z-X}{\sqrt{2}}U^\dagger.
+    \end{aligned}
+    \label{eq:ideal-chsh-settings}
+\end{equation}
+These settings give $S=2\sqrt{2}$. Before the transformation $U$, the
+positive-eigenvalue remote states are linear polarizations at $22.5^\circ$
+and $-22.5^\circ$ relative to $h$. The corresponding directions on the
+Poincar\'e sphere are the bisectors of the $X$ and $Z$ axes.
+
+If it is preferable to retain linear analyzers remotely, the basis
+adaptation can instead be placed locally. For example,
+\begin{equation}
+    \begin{aligned}
+        A_0&=U^{\mathsf T}ZU^*,&
+        A_1&=U^{\mathsf T}XU^*,\\
+        B_0&=\frac{Z+X}{\sqrt{2}},&
+        B_1&=\frac{Z-X}{\sqrt{2}}
+    \end{aligned}
+    \label{eq:local-adapted-chsh}
+\end{equation}
+gives the same ideal CHSH value. Each station's settings depend on the
+shared state and its own measurement choice, not on the other station's
+choice in a particular trial.
+
+\section{Characterizing the delivered state}
+
+\subsection{Tomography after the delivery fiber}
+
+For an SPDC source, the proposed reference plane is the output of the
+delivery fiber, with the input coupling and fiber routing left in their
+operational configuration. Light emerging from the fiber is collimated
+into a temporary polarization analyzer, and two-photon tomography is
+performed using coincidences with the other arm. This characterizes the
+state in the spatial mode actually delivered to that plane.
+
+Putting the diagnostic analyzer after the fiber avoids modifying the
+input collection when inserting or removing polarization optics.
+Changing the input coupling can change both the collected spatial mode
+and, if the fiber is disturbed, its polarization transformation.
+Tomography at this plane does not include optics farther downstream,
+such as a telescope; those must be included in a later calibration if
+they change the polarization.
+
+Full two-qubit polarization tomography reconstructs $\rho_{LT}$ without
+assuming a Bell state~\cite{James2001Measurement}. A convenient complete
+measurement set is the nine combinations of $H/V$, $D/A$, and $R/L$ at
+the two stations, recording both PBS outputs. With
+$\sigma_0=\I$ and $(\sigma_x,\sigma_y,\sigma_z)=(X,Y,Z)$,
+\begin{equation}
+    \rho_{LT}
+    =\frac14\sum_{\mu,\nu=0,x,y,z}
+        t_{\mu\nu}\,\sigma_\mu\otimes\sigma_\nu,
+    \qquad
+    t_{\mu\nu}=\Tr\!\left[
+        \rho_{LT}(\sigma_\mu\otimes\sigma_\nu)
+    \right],
+    \label{eq:two-photon-tomography}
+\end{equation}
+where $t_{00}=1$ leaves fifteen independent real parameters. The measured
+marginals supply the single-photon terms as well as the joint correlations.
+
+The reconstruction should account for detector efficiencies, unequal
+acquisition times, and accidental coincidences. Source brightness and
+fiber polarization must remain sufficiently stable during the acquisition.
+A physical density-matrix fit and statistical resampling of the counts
+can be used to estimate the uncertainties of derived quantities.
+These are measurements of the detected polarization ensemble; collection
+biases must be included when interpreting the result.
+
+\subsection{Entanglement and alignment with a reference Bell state}
+
+Concurrence assesses entanglement independently of local basis
+rotations~\cite{Wootters1998Concurrence}. For a normalized pure state,
+\begin{equation}
+    \ket\psi=a\ket{hh}+b\ket{hv}+c\ket{vh}+d\ket{vv},
+    \qquad
+    M=\begin{pmatrix}a&b\\c&d\end{pmatrix},
+\end{equation}
+it is
+\begin{equation}
+    C(\ket\psi)=2|\det M|=2|ad-bc|.
+\end{equation}
+For a general reconstructed density matrix, define
+$\widetilde\rho=(Y\otimes Y)\rho_{LT}^*(Y\otimes Y)$. If
+$\lambda_1\geq\lambda_2\geq\lambda_3\geq\lambda_4$ are the square roots
+of the eigenvalues of $\rho_{LT}\widetilde\rho$, then
+\begin{equation}
+    C(\rho_{LT})
+    =\max(0,\lambda_1-\lambda_2-\lambda_3-\lambda_4).
+    \label{eq:concurrence}
+\end{equation}
+Concurrence is not the determinant of the density matrix. It is zero for
+separable two-qubit states and one for maximally entangled states.
+An unknown stable local unitary does not change it.
+
+A concurrence close to one supports a nearly maximally entangled
+description but does not determine the measurement bases. To quantify
+how well a local controller could align the state with the reference,
+one can also evaluate
+\begin{equation}
+    F_{\mathrm{opt}}
+    =\max_V
+    \bra{\Phi^+}(V\otimes\I)\rho_{LT}
+        (V^\dagger\otimes\I)\ket{\Phi^+},
+    \label{eq:optimized-bell-fidelity}
+\end{equation}
+where the maximization is over local unitaries. The maximizing $V$ gives
+a candidate correction; for Eq.~\eqref{eq:shared-state}, it is $U^*$ and
+$F_{\mathrm{opt}}=1$. A unitary cannot remove the residual mixedness of
+an imperfect state. Both concurrence and optimized fidelity should be
+reported with their statistical uncertainties.
+
+\subsection{Choosing settings from an imperfect state}
+
+When the measured state is not adequately described by a pure maximally
+entangled state, its correlations can be used directly. Let $T$ be the
+$3\times3$ submatrix with entries $T_{ij}=t_{ij}$ for $i,j=x,y,z$.
+For unit measurement directions $\boldsymbol a$ and $\boldsymbol b$,
+\begin{equation}
+    E(\boldsymbol a,\boldsymbol b)
+    =\boldsymbol a^{\mathsf T}T\boldsymbol b.
+    \label{eq:measured-correlations}
+\end{equation}
+Substituting this expression into Eq.~\eqref{eq:chsh} allows the four
+directions to be optimized using the reconstructed state. Hardware
+restrictions must be imposed in that optimization: a station with only
+an HWP and PBS has linear directions
+$\boldsymbol b=(\sin2\beta,0,\cos2\beta)$, whereas a QWP--HWP analyzer can
+select any direction. This procedure neither presumes a Bell state nor
+requires separating source imperfections from propagation effects.
+
+\section{Implementing the selected measurement bases}
+
+\subsection{From a target projector to wave-plate angles}
+
+Once the target state $\ket b=b_h\ket h+b_v\ket v$ at an analyzer input
+has been chosen, the required wave-plate transformation satisfies
+\begin{equation}
+    \boxed{
+        U_w^\dagger\Pi_hU_w=\ket b\bra b,
+        \qquad \Pi_h=\ket h\bra h
+    }.
+    \label{eq:target-projector}
+\end{equation}
+The vertical PBS port automatically realizes
+$\I-\ket b\bra b$, so a single pair of angles specifies the whole
+orthonormal measurement basis.
+
+For a normalized state with amplitudes $b_h,b_v$, define
+\begin{equation}
+    c_x=2\operatorname{Re}(b_h^*b_v),\qquad
+    c_y=2\operatorname{Im}(b_h^*b_v),\qquad
+    c_z=|b_h|^2-|b_v|^2.
+    \label{eq:stokes-definition}
+\end{equation}
+The projector is $(\I+c_xX+c_yY+c_zZ)/2$. From
+Eq.~\eqref{eq:analyzer-state}, the analyzer selects the Stokes vector
+\begin{equation}
+    \begin{aligned}
+        s_x&=\sin(2\theta_1)\cos(4\theta_2-2\theta_1),\\
+        s_y&=-\sin(4\theta_2-2\theta_1),\\
+        s_z&=\cos(2\theta_1)\cos(4\theta_2-2\theta_1).
+    \end{aligned}
+    \label{eq:analyzer-stokes}
+\end{equation}
+Setting $\boldsymbol s=\boldsymbol c$ and choosing
+$\cos(4\theta_2-2\theta_1)=\sqrt{c_x^2+c_z^2}\geq0$ gives
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+        \theta_1&=\frac12\operatorname{atan2}(c_x,c_z),\\[3pt]
+        \theta_2&=\frac14\left[
+            \operatorname{atan2}(c_x,c_z)
+            +\operatorname{atan2}\!\left(-c_y,\sqrt{c_x^2+c_z^2}\right)
+        \right].
+    \end{aligned}}
+    \label{eq:compensation-angles}
+\end{equation}
+Here $\operatorname{atan2}(y,x)$ is the polar angle
+$\gamma\in(-\pi,\pi]$ of $(x,y)$, defined for $(x,y)\neq(0,0)$ by
+\begin{equation}
+    \cos\gamma=\frac{x}{\sqrt{x^2+y^2}},
+    \qquad
+    \sin\gamma=\frac{y}{\sqrt{x^2+y^2}}.
+\end{equation}
+Unlike $\arctan(y/x)$, it keeps the signs of both coordinates, chooses the
+correct quadrant, and handles $x=0$ when $y\neq0$.
+At $c_x=c_z=0$, one may choose $\theta_1$ freely and use
+\begin{equation}
+    \theta_2=\frac{\gamma+2\theta_1}{4},
+    \qquad \gamma=\operatorname{atan2}(-c_y,0).
+\end{equation}
+
+For the target linear state
+$\ket{\alpha}=\cos\alpha\ket h+\sin\alpha\ket v$, one convenient solution
+is $\theta_1=\alpha$, $\theta_2=\alpha/2$, with equivalent branches
+understood. In particular, $H/V$ uses $(0,0)$ and $D/A$ uses
+$(45^\circ,22.5^\circ)$.
+
+\subsection{Choosing angle branches to reduce analyzer movement}
+
+The inverse in Eq.~\eqref{eq:compensation-angles} is not unique. Its
+choice of a nonnegative cosine is convenient algebraically, but need not
+minimize movement between successive projectors. An alternative convention
+places both optical angles in $[0,\pi/2)$ while retaining the sign of the
+projection onto the selected QWP direction. For a unit Stokes vector,
+define
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+        q&=\left[\frac12\operatorname{atan2}(c_x,c_z)\right]
+            \bmod\frac{\pi}{2},\\
+        t&=c_x\sin(2q)+c_z\cos(2q),\\
+        h&=\left[\frac{2q+\operatorname{atan2}(-c_y,t)}{4}\right]
+            \bmod\frac{\pi}{2},
+        \qquad (\theta_1,\theta_2)=(q,h).
+    \end{aligned}}
+    \label{eq:movement-angle-convention}
+\end{equation}
+Here modulo returns the representative in $[0,\pi/2)$. At the circular
+poles $c_x=c_z=0$, set $q=0$. Away from the poles, the chosen QWP direction
+is parallel or antiparallel to $(c_x,c_z)$, so
+$t=\pm\sqrt{c_x^2+c_z^2}$. The signed value $t$, rather than its absolute
+value, selects the required HWP branch. Substitution into
+Eq.~\eqref{eq:analyzer-stokes} gives the requested Stokes vector.
+The reduction of $q$ modulo $\pi/2$ is accompanied by this recalculation
+of $h$; it is not a claim that a QWP alone has that angular period.
+
+With the circular-state definitions of Eq.~\eqref{eq:polarization-states},
+$R$ has $c_y=-1$ and $L$ has $c_y=+1$. Equation~\eqref{eq:movement-angle-convention}
+gives the following sequence, with all angles expressed in degrees:
+\begin{center}
+\begin{tabular}{c c c l}
+Projector & QWP $q$ & HWP $h$ & Movement from previous setting\\
+\hline
+$H$ & $0$ & $0$ & initial setting\\
+$R$ & $0$ & $22.5$ & HWP $+22.5^\circ$\\
+$V$ & $0$ & $45$ & HWP $+22.5^\circ$\\
+$L$ & $0$ & $67.5$ & HWP $+22.5^\circ$\\
+$A$ & $45$ & $67.5$ & QWP $+45^\circ$\\
+$D$ & $45$ & $22.5$ & HWP $-45^\circ$
+\end{tabular}
+\end{center}
+Every transition moves exactly one plate. The five movements sum to
+$157.5^\circ$: $45^\circ$ on the QWP and $112.5^\circ$ on the HWP.
+
+The ordering can be obtained by a small discrete optimization. Assign
+one vertex to each of the six angle pairs in the table and connect two
+vertices only when one plate angle is unchanged. Give each edge the
+absolute change of the other angle. Enumerate the $6!=720$ projector
+orders, discard those containing a forbidden transition, and minimize
+the sum of the five edge costs. This yields the displayed order (or its
+reverse), with cost $157.5^\circ$. Five movements are also the minimum
+possible number for six distinct projectors. The angular minimum stated
+here is for these fixed representatives and an open sequence: it excludes
+initial positioning and returning to the start, and is not an unrestricted
+optimization over every equivalent angle branch. For arbitrary target
+projectors, Eq.~\eqref{eq:movement-angle-convention} is a deterministic
+convention, not a trajectory optimizer.
+
+If one PBS output per station is sampled sequentially, the resulting
+$36$ joint projector measurements can use a serpentine traversal. Let
+$P=(H,R,V,L,A,D)$. Advance the first station through $P$; at successive
+settings, traverse $P$ at the second station alternately forwards and
+backwards. At a row boundary, the second station remains at its last
+setting while only one plate at the first station moves. Thus all
+$36$ pairs require only $35$ individual plate movements between
+measurements, the minimum possible count. Their total angular travel is
+$6(157.5^\circ)+157.5^\circ=1102.5^\circ$. This construction establishes
+a minimum movement count, not a globally minimum angular path through
+all joint settings. If both PBS outputs are recorded, the nine joint
+basis settings discussed earlier already supply the $36$ outcome
+combinations; the sequential-projector schedule is then unnecessary.
+
+These angles refer to optical axes; fixed calibrated mount offsets must
+be added when commanding the motors. Unchanged plate targets should not
+be commanded again. The travel calculation assumes the indicated signed
+rotations are available and excludes homing and settling delays. Minimum
+angular travel need not imply minimum acquisition time when motor speeds,
+direction-dependent behavior, or settling requirements differ. Changes
+of branch near coordinate boundaries also mean that this convention does
+not guarantee smooth motion for a continuously varying target state.
+
+\subsection{Adapting either station or applying a fixed correction}
+
+For $\ket{\Psi_U}$, ideal reference projectors $\Pi_a$ and $\Pi_b$ can
+be implemented by leaving the local projector unchanged and adapting
+the remote one to $U\Pi_bU^\dagger$. Alternatively, the remote
+projector can remain unchanged while the local one becomes
+\begin{equation}
+    \widetilde{\Pi}_a=U^{\mathsf T}\Pi_aU^*.
+    \label{eq:local-effective-projector}
+\end{equation}
+Both choices reproduce the corresponding joint probabilities of
+$\ket{\Phi^+}$. The analyzer target kets are respectively $U\ket b$
+or $U^{\mathsf T}\ket a$; their Stokes vectors are inserted into
+Eq.~\eqref{eq:compensation-angles}. Two adjustable plates suffice for
+each projector even though $U$ itself has three parameters.
+
+A different implementation restores the reference state before analysis:
+\begin{equation}
+    \boxed{(U^*\otimes U)\ket{\Phi^+}=\ket{\Phi^+}.}
+    \label{eq:local-channel-correction}
+\end{equation}
+A general local controller, such as a QWP--HWP--QWP sequence, can apply
+$V=U^*$. Independent analyzers may then use the usual reference settings.
+If the same controller also performs local analysis, its setting must
+change with the local basis: an analyzer $A_a$ satisfying
+$A_a^\dagger\ket h=\ket a$ requires total transformation $A_aU^*$.
+The existence of a fixed correction therefore does not remove the need
+to select local measurement bases.
+
+For a real rotation $U=R_\beta$, the local correction is the same
+rotation $R_\beta$. For $U=\operatorname{diag}(1,e^{i\delta})$, it is
+$\operatorname{diag}(1,e^{-i\delta})$. This restores joint correlations;
+it does not reverse a channel on an arbitrary independent photon.
+The reduced state of each photon remains $\I/2$ in the ideal model,
+so calibration information comes from coincidences rather than singles.
+
+\subsection{Horizontal--vertical channel compensation as an example}
+
+The earlier channel picture is recovered when a specified input state
+passes through a known unitary $U_c$. For an input density matrix $\rho$,
+the horizontal detection probability is
+\begin{equation}
+    p(h)=\Tr\!\left[
+        U_c^\dagger U_w^\dagger\Pi_hU_wU_c\,\rho
+    \right].
+\end{equation}
+To measure the input projector $\Pi_b$, choose
+\begin{equation}
+    U_w^\dagger\Pi_hU_w=U_c\Pi_bU_c^\dagger.
+    \label{eq:arbitrary-basis-condition}
+\end{equation}
+For $H/V$, the target is simply $U_c\ket h$. The other PBS output
+then measures the input $v$ projector by orthogonality.
+
+This one-basis calibration leaves a relative phase undetermined:
+\begin{equation}
+    U_wU_c=e^{i\chi}
+    \begin{pmatrix}1&0\\0&e^{i\delta}\end{pmatrix}.
+    \label{eq:residual-phase}
+\end{equation}
+An independent $D/A$ analyzer after this transformation measures,
+at the input, $(\ket h\pm e^{-i\delta}\ket v)/\sqrt2$. Hence a setting
+that restores $H/V$ need not restore $D/A$.
+Rotating the HWP inside the QWP--HWP pair by $22.5^\circ$ also does
+not generally select the desired $D/A$ basis. Even without a channel,
+the settings $(0,0)$ select $h$, while $(0,22.5^\circ)$ select $r$.
+The appropriate target for an input diagonal measurement is $U_c\ket d$.
+This missing relative phase is the same information supplied by a
+second correlated axis in the shared-state description.
+
+\subsection{Heralded calibration of individual bases}
+
+When the maximally entangled model is justified, individual analyzer
+targets can be calibrated directly through conditional tomography:
+\begin{equation}
+    \begin{aligned}
+        {}_L\!\bra a\Psi_U\rangle
+            &=\frac{1}{\sqrt2}U\ket{a^*}_T,\\
+        {}_T\!\bra b\Psi_U\rangle
+            &=\frac{1}{\sqrt2}U^{\mathsf T}\ket{b^*}_L.
+    \end{aligned}
+    \label{eq:heralded-targets}
+\end{equation}
+Each ideal herald outcome has probability $1/2$. For linear target states
+the conjugation disappears. Heralding $h$ and $d$ locally therefore
+provides the two remote targets for matched $H/V$ and $D/A$ measurements.
+Conversely, heralding those states remotely provides the corresponding
+local targets while retaining linear remote analyzers.
+
+Tomography of each conditional state still needs all three Stokes
+components, because a linear herald can prepare an elliptical state.
+Once a target is reconstructed, Eq.~\eqref{eq:compensation-angles}
+provides its analyzer settings. Recording both herald PBS outputs
+also permits calibration and checks of the complementary target.
+
+For a general measured state, the conditional remote density matrix is
+instead
+\begin{equation}
+    \rho_{T|a}
+    =\frac{
+        \Tr_L[(\Pi_a\otimes\I)\rho_{LT}(\Pi_a\otimes\I)]
+    }{
+        \Tr[(\Pi_a\otimes\I)\rho_{LT}]
+    }.
+\end{equation}
+It may be mixed, and complementary heralds need not produce orthogonal
+states. The pure-state prescription cannot then be interpreted as an
+exact restoration of all correlations; settings should be selected
+from the measured state as described above.
+
+\section{Measurement resources and reduced calibration}
+
+\subsection{Complete tomography versus verification}
+
+A general controller or QWP--HWP pair at one station and only an HWP at
+the other do not provide complete two-photon tomography. The latter
+station accesses only the span of $\I,X,Z$. In
+Eq.~\eqref{eq:two-photon-tomography}, the four coefficients
+$t_{0y},t_{xy},t_{yy},t_{zy}$ are therefore unobserved. Further remote
+linear settings do not supply them. A temporary manual QWP at that
+station supplies circular analysis; full initial tomography does not
+require every wave plate to be motorized.
+
+Incomplete measurements can nevertheless verify a chosen reference
+state. For any physical $\rho_{LT}$,
+\begin{equation}
+    \bra{\Phi^+}\rho_{LT}\ket{\Phi^+}
+    \geq\frac{\langle X\otimes X\rangle+
+                  \langle Z\otimes Z\rangle}{2}.
+    \label{eq:bell-fidelity-bound}
+\end{equation}
+This follows from the operator inequality
+$\ket{\Phi^+}\bra{\Phi^+}\geq(X\otimes X+Z\otimes Z)/2$.
+It can certify high fidelity after basis alignment without presuming a
+pure state, but does not reconstruct a general density matrix or
+separate source errors from channel errors.
+
+\subsection{Reduced characterization under the ideal model}
+
+Characterizing a process through correlations with another photon is
+the principle of ancilla-assisted process tomography
+\cite{Altepeter2003Ancilla}. Once the pure maximally entangled description
+has been established to adequate accuracy, the following reduced
+procedure determines its relative unitary $U$.
+
+Measure $H/V$ remotely and perform full local tomography conditioned on
+the $h$ outcome; repeat with remote $D/A$, conditioned on $d$. By
+Eq.~\eqref{eq:heralded-targets}, the local states are
+\begin{equation}
+    \rho_{L|h}=U^{\mathsf T}\Pi_hU^*,
+    \qquad
+    \rho_{L|d}=U^{\mathsf T}\Pi_dU^*.
+    \label{eq:two-remote-conditions}
+\end{equation}
+These determine $U$ up to global phase. Indeed, if two unitaries $W_1,W_2$
+representing $U^{\mathsf T}$ reproduce both projectors, then
+$W_2^\dagger W_1$ preserves both $\Pi_h$ and $\Pi_d$. The first condition
+makes it diagonal in $h/v$ and the second forces its two phases to agree.
+Thus six combinations of three local and two remote bases suffice in
+this restricted model.
+
+This is a calibration of the relative bases, not independent evidence
+that the source is a Bell state or that the channel is unitary.
+Calibrated local projectors are required to identify a numerical $U$;
+otherwise coincidence feedback can locate useful controller settings
+without identifying its Jones matrix. Drift during calibration and
+departures from the assumed state must be checked with additional data.
+
+\subsection{Choosing which elements must move}
+
+For sequential Bell-test settings, a local QWP--HWP pair can implement
+the adapted local bases of Eq.~\eqref{eq:local-adapted-chsh}, while a
+single remote HWP selects linear bases. Both local plates may need to
+move between local settings. A three-parameter fiber controller can
+serve the same purpose if it realizes arbitrary unitaries and is
+calibrated. Keeping it at a fixed correction setting requires a separate
+analyzer if the local basis is to vary independently.
+
+A remote QWP may remain installed for occasional full tomography
+without needing its own motor. For this option, the order
+\begin{equation}
+    \text{rotating HWP}\ \longrightarrow\
+    \text{manual QWP}\ \longrightarrow\ \text{PBS}
+\end{equation}
+is useful. With the QWP axes aligned to $h/v$, it commutes with the PBS
+projectors and does not affect detection probabilities. The HWP alone
+then selects linear angle $\alpha=2\theta_H$. Rotating the manual QWP
+allows circular analysis during tomography. This reversed order has
+different general angle formulas from the QWP--HWP analyzer derived
+earlier; those formulas must not be used interchangeably.
+
+If two bases must be sampled simultaneously with a beam splitter and two
+PBS arms, independent QWP--HWP analyzers provide a direct implementation
+of the two selected projectors. Any unitary polarization transformations
+specific to the splitter paths should be included in the arm calibrations.
+A common full correction followed by separate linear analyzers is another
+option. Merely aligning one basis with a common two-plate pair leaves
+the relative-phase ambiguity of Eq.~\eqref{eq:residual-phase}.
+Neither configuration reverses depolarization or general
+polarization-dependent loss.
+
+The operational sequence is therefore to characterize the delivered
+state with the collection geometry fixed, assess its entanglement and
+uncertainty, select accessible Bell-test settings, and calibrate the
+analyzers for those projectors. Correlation checks can subsequently
+monitor stability without repeating full tomography at every step.
+
+\bibliographystyle{unsrt}
+\bibliography{../../refs}
+
+\end{document}
